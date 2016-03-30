@@ -8,7 +8,7 @@ all the sub-repositories along with it run the following commands:
 
 ```
 git pull
-git submodule update
+git submodule update --init
 ```
 
 Then initialize everything by running:
