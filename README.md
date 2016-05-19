@@ -14,8 +14,8 @@ cd build
 # Edit local.conf to match your setup.
 vi conf/local.conf
 
-# The default machine is "topic-miami-florida-gen-xc7z015", change it in the
-# "profile" script or just export the MACHINE environment before building.
+# To build your BSP it is necessary to set the correct MACHINE environment variable. To do this change it in the
+# "profile" script or just export the MACHINE environment before building. Refer to meta-topic/conf/machine for a list of values.
 
 # Then build your first image and relax a bit:
 source profile
