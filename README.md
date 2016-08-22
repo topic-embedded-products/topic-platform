@@ -32,7 +32,7 @@ expects to run with busybox-mdev instead of udev.
 The simplest way to boot the resulting image is to copy it onto an SD card. In case you have not yet formatted and partitioned your SD-card yet, execute the following script first. This script partitions and formats an SD card so it can be used directly. This is only required once.
 
 ```
-sudo ../meta-topic/scripts/partition-sd-card.sh
+sudo ../meta-topic/scripts/partition_sd_card.sh
 ```
 
 The meta-topic/scripts/install-to-sd* scripts copy the required files to your SD card. You'll have to run these scripts as root, as they require low-level access to the SD card.
