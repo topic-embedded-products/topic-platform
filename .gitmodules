@@ -10,3 +10,6 @@
 [submodule "meta-topic"]
 	path = meta-topic
 	url = https://github.com/topic-embedded-products/meta-topic
+[submodule "meta-xilinx"]
+	path = meta-xilinx
+	url = https://github.com/Xilinx/meta-xilinx
