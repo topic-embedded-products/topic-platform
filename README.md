@@ -3,8 +3,8 @@ Topic Embedded Products BSP for the Miami and Florida boards on top of a Linux d
 # Initial setup
 
 ```
-git clone http://github.com/topic-embedded-products/topic-platform.git my-platform
-cd my-platform
+git clone http://github.com/topic-embedded-products/topic-platform.git
+cd topic-platform
 git submodule update --init
 
 meta-topic/scripts/init-oe.sh
@@ -54,5 +54,24 @@ git pull
 git submodule update
 ```
 
+# Development environment setup
+Usually you'll be creating your own recipes and defining your new things. Here's
+a reasonable cookbook recipe for that.
 
+```
+# Create a GIT repository
+mkdir my-project
+cd my-project
+git init .
+# Add topic-platform as a submodule
+git submodule add http://github.com/topic-embedded-products/topic-platform.git
+# Add other submodules, for example meta-dyplo
+git submodule add http://github.com/topic-embedded-products/meta-dyplo.git
+# Initialize and fetch everything
+git submodule update --init --recursive
+# Initialize the OE build environment
+source topic-platform/oe-core/oe-init-build-env build topic-platform/bitbake
+```
+
+After that, you can start adding your own layer and really begin development...
 
