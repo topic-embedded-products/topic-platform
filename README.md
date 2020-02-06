@@ -6,10 +6,6 @@ Topic Embedded Products BSP for the Miami and Florida boards on top of a Linux d
 
 Dynamic loading of devicetree overlays. Inject DT fragments after loading the FPGA code, so drivers can be made built-in. Can detect carriers and expansion boards at runtime and load appropriate drivers and firmware.
 
-## TODO
-
-MPSoC modules cannot boot from QSPI (broken in Xilinx' u-boot fork)
-
 # Initial setup
 
 ```
