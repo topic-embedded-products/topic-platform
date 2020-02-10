@@ -1,5 +1,9 @@
 # About this repository
 
+This is a development branch for "zeus" test and integration.
+
+## BSP
+
 Topic Embedded Products BSP for the Miami and Florida boards on top of a Linux distribution. The Miami/Florida BSP is basically a lightweight OpenEmbedded based Linux Distribution, allowing you to easily run your applications on the Miami/Florida. It is based on the mainline Linux distribution as well as the Xilinx supported branch.
 
 ## New features
