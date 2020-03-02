@@ -37,6 +37,22 @@ MACHINE=tdkz30 nice bitbake my-image
 Note that "my-image" was designed to be used with DISTRO=tiny. It
 expects to run with busybox-mdev instead of udev.
 
+# For TOPIC employees
+
+If you're in the office, and want to reduce the time it takes to build your
+images, create a file `${HOME}/.bitbake-site.conf` with the following contents,
+or something similar matching your preferences:
+```
+# Re-use the build server's hard labour
+SSTATE_MIRRORS = "\
+	file://.* http://fpga-server.local/share/sstate/PATH \n \
+	"
+SOURCE_MIRROR_URL = "http://fpga-server.local/sources/"
+# Use one set of directories to store sstate-cache and downloads
+SSTATE_DIR = "${HOME}/projects/sstate-cache"
+DL_DIR = "${HOME}/projects/downloads"
+```
+
 # Copying to SD-card
 
 The simplest way to boot the resulting image is to copy it onto an SD card. In case you have not yet formatted and partitioned your SD-card yet, execute the following script first. This script partitions and formats an SD card so it can be used directly. This is only required once.
