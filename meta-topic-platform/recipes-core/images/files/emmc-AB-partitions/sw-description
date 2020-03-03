@@ -19,6 +19,7 @@ software =
 			sha256 = "@@@ROOTFSNAME@@";
 			device = "/dev/emmc-rootfs-inactive";
 			type = "archive";
+			preserve-attributes = true;
 			filesystem = "ext4";
 			path = "../../tmp/UPDATE-MOUNT";
 		}
