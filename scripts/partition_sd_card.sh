@@ -8,6 +8,23 @@ else
 	DEV=$1
 fi
 
+DEVB=`basename ${DEV}`
+PARTPREFIX=sd
+# DEVP is the base name for partitions. On some block devices an
+# additional "p" is needed.
+if [ "${DEVB:0:6}" = "mmcblk" ]
+then
+	DEVD=`dirname ${DEV}`
+	DEVP=${DEVD}/${DEVB}p
+	# Detect if this is an eMMC device, they have extra "boot" devices
+	if [ -e "${DEV}boot0" ]
+	then
+		PARTPREFIX=emmc
+	fi
+else
+	DEVP=${DEV}
+fi
+
 # Function to reverse an array
 reverse () {
     local out=()
@@ -15,7 +32,7 @@ reverse () {
         out=("$1" "${out[@]}")
         shift 1
     done
-    echo "${out[@]}"
+    echo -n "${out[@]}"
 }
 
 # umount all and wipe 8K of all partitions and block device.
@@ -23,7 +40,9 @@ reverse () {
 # Ubuntu systems the partition table will be reloaded when writing to a block device
 # The partitions are wiped because the kernel otherwise tries to remount them after the
 # new partition table is written to the device
-for n in $(reverse ${DEV}*)
+DEVN="$(reverse ${DEVP}[0-9]) ${DEV}"
+echo "DEVN=${DEVN}"
+for n in ${DEVN}
 do
 	echo "Unmounting ${n}"
 	umount $n || true
@@ -32,29 +51,29 @@ done
 
 # Wait until kernel reloaded partition table
 echo -n "Waiting for partition table to reload "
-sync ${DEV}*
+sync ${DEVN}
 partprobe ${DEV}
-while [ -e "${DEV}1" ] || [ -e "${DEV}2" ] || [ -e "${DEV}3" ]
+while [ -e "${DEVP}1" ] || [ -e "${DEVP}2" ] || [ -e "${DEVP}3" ]
 do
 	echo -n "."
 	sleep 0.1
 done
 echo ""
 
-# Partition the disk, as 64M FAT16, 960MB root and the rest data
+# Partition the disk, as 64M FAT16, 2xroot and the rest data
 parted --align optimal --script ${DEV} -- \
 	mklabel msdos \
 	mkpart primary fat16 1MiB 64MiB \
-	mkpart primary ext4 64MiB 1024MiB \
-	mkpart primary ext4 1024MiB 2048MiB \
-	mkpart primary ext4 2048MiB -1s \
+	mkpart primary ext4 64MiB 25% \
+	mkpart primary ext4 25% 50% \
+	mkpart primary ext4 50% -1s \
 	set 2 boot on
 
 # Wait until kernel reloaded partition table
 # The system is removing & adding the devices several times, therefore sleep for 1 second
 sleep 1
 echo -n "Waiting for partition table to reload "
-while [ ! -e "${DEV}1" ] || [ ! -e "${DEV}2" ] || [ ! -e "${DEV}3" ]
+while [ ! -e "${DEVP}1" ] || [ ! -e "${DEVP}2" ] || [ ! -e "${DEVP}3" ]
 do
 	echo -n "."
 	sleep 0.1
@@ -62,12 +81,12 @@ done
 echo ""
 
 # format the DOS part
-mkfs.vfat -n "boot" ${DEV}1
+mkfs.vfat -n "boot" ${DEVP}1
 
 # Format the Linux rootfs part
-mkfs.ext4 -m 0 -L "sd-rootfs-a" -O sparse_super,dir_index  ${DEV}2
-mkfs.ext4 -m 0 -L "sd-rootfs-b" -O sparse_super,dir_index  ${DEV}3
+mkfs.ext4 -m 0 -L "${PARTPREFIX}-rootfs-a" -O sparse_super,dir_index ${DEVP}2
+mkfs.ext4 -m 0 -L "${PARTPREFIX}-rootfs-b" -O sparse_super,dir_index ${DEVP}3
 
 # Format the Linux data part, optimize for large files
-mkfs.ext4 -m 0 -L "data" -O large_file,sparse_super,dir_index ${DEV}4
+mkfs.ext4 -m 0 -L "data" -O large_file,sparse_super,dir_index ${DEVP}4
 
