@@ -1,0 +1,12 @@
+#!/bin/sh -e
+if [ -c "/dev/ubi0" ]
+then
+	ubidetach -m 3 /dev/ubi_ctrl
+fi
+
+ubiformat /dev/mtd3 -y
+ubiattach -m 3 /dev/ubi_ctrl
+UBI_SIZE=$(ubinfo -a /dev/ubi0 | sed -n 's/^Amount of available logical eraseblocks: [0-9]\+ (\([0-9]\+\) bytes.*$/\1/p')
+VOL_SIZE=$(expr ${UBI_SIZE} / 2)
+ubimkvol /dev/ubi0 -N qspi-rootfs -s ${VOL_SIZE}
+ubimkvol /dev/ubi0 -N qspi-rootfs-r -s ${VOL_SIZE}

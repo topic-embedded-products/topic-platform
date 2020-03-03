@@ -16,6 +16,7 @@ SRC_URI += " \
 	file://switch_mmc_boot_partition \
 	file://create_mmc_links \
 	file://prepare_filesystem \
+	file://init_ubi \
 "
 
 do_install_append() {
@@ -29,6 +30,7 @@ do_install_append() {
 	install -m 0755 ${WORKDIR}/switch_mmc_boot_partition ${D}${sbindir}
 	install -m 0755 ${WORKDIR}/create_mmc_links ${D}${sbindir}
 	install -m 0755 ${WORKDIR}/prepare_filesystem ${D}${sbindir}
+	install -m 0755 ${WORKDIR}/init_ubi ${D}${sbindir}
 
 	# Replace 1MB image with something more modest
 	install -m 644 ${WORKDIR}/background.jpg ${D}/www/images/background.jpg
