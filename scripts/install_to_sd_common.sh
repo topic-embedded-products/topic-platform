@@ -51,14 +51,14 @@ else
     fi
 fi
 
-BLOCK_DEV=$(sed -n "s@\(/dev/\w\+\)[0-9] ${MEDIA}/sd-rootfs-[a-b] .*@\1@p" /proc/mounts | uniq -d)
+BLOCK_DEV=$(sed -n "s@^\(/dev/\w\+\)[0-9] ${MEDIA}/sd-rootfs-[a-b] .*\$@\1@p" /proc/mounts | uniq -d)
 if [ -z "$BLOCK_DEV" ]
 then
 	echo "${MEDIA}/sd-rootfs-* not found!"
 	exit 1
 fi
 
-BOOTABLE_PART=$(fdisk -l ${BLOCK_DEV} | sed -n 's@/dev/sd[a-z]\([0-9]\)\s\+\*\(.*\)@\1@p')
+BOOTABLE_PART=$(fdisk -l ${BLOCK_DEV} | sed -n 's@^/dev/sd[a-z]\([0-9]\)\s\+\*\(.*\)$@\1@p')
 if [ "${BOOTABLE_PART}" = "2" ]
 then
 	ROOTFS=${MEDIA}/sd-rootfs-a

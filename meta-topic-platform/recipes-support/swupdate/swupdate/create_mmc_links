@@ -2,7 +2,7 @@
 for block in /dev/mmcblk[0-9]
 do
 	boot_partition=$(get-bootable-mbr-partition ${block})
-	for partition_name in $(blkid ${block}p[0-9] | sed -n "s@${block}p\([0-9]\).*LABEL=\"\(emmc\|sd\)-rootfs-[ab]\".*@\1|\2@p")
+	for partition_name in $(blkid ${block}p[0-9] | sed -n "s@^${block}p\([0-9]\).*LABEL=\"\(emmc\|sd\)-rootfs-[ab]\".*@\1|\2@p")
 	do
 		partition=${partition_name%|*}
 		name=${partition_name##*|}

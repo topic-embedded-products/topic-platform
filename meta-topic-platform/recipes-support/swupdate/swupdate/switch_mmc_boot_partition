@@ -5,7 +5,7 @@ then
 	exit 1
 fi
 
-block_partition=`readlink $1 | sed 's/.*\(mmcblk[0-9]\)p\([0-9]\)/\1|\2/'`
+block_partition=`readlink $1 | sed 's/.*\(mmcblk[0-9]\)p\([0-9]\)$/\1|\2/'`
 
 if [ ${#block_partition} -ne 9 ]
 then

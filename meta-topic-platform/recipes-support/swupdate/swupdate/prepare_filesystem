@@ -19,7 +19,7 @@ then
 	exit 1
 fi
 
-for m in $(sed -n "s@\($ACTUAL_DEVICE\|$1\) \([^[:space:]]\+\) .*@\2@p" /proc/mounts)
+for m in $(sed -n "s@^\($ACTUAL_DEVICE\|$1\) \([^[:space:]]\+\) .*@\2@p" /proc/mounts)
 do
 	umount $m
 done
@@ -42,7 +42,7 @@ else
 	if [ -z "$NAME" ]
 	then
 		# Try to make up a name
-		PREFIX="$(echo $1 | sed 's@/dev/\(.*\)-\(active\|inactive\).*@\1@')"
+		PREFIX="$(echo $1 | sed 's@^/dev/\(.*\)-\(active\|inactive\).*@\1@')"
 		if [ ! -z "${PREFIX}" ]
 		then
 			for PROP in a b
