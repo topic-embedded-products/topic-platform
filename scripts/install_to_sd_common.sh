@@ -51,7 +51,18 @@ else
     fi
 fi
 
-ROOTFS=${MEDIA}/sd-rootfs-a
+BLOCK_DEV=$(sed -n "s@\(/dev/\w\+\)[0-9] ${MEDIA}/sd-rootfs-[a-z] .*@\1@p" /proc/mounts | uniq)
+BOOTABLE_PART=$(fdisk -l ${BLOCK_DEV} | sed -n 's@/dev/sd[a-z]\([0-9]\)\s\+\*\(.*\)@\1@p')
+if [ "${BOOTABLE_PART}" = "2" ]
+then
+	ROOTFS=${MEDIA}/sd-rootfs-a
+elif [ "${BOOTABLE_PART}" = "3" ]
+then
+	ROOTFS=${MEDIA}/sd-rootfs-b
+else
+	echo "Unsupported bootable partition"
+	exit 1
+fi
 
 if $DO_ROOTFS
 then
@@ -153,7 +164,7 @@ then
 		done
 	fi
 
-	echo "Writing sd-rootfs-a..."
+	echo "Writing ${ROOTFS}..."
 	if [ ! -f dropbear_rsa_host_key -a -f ${ROOTFS}/etc/dropbear/dropbear_rsa_host_key ]
 	then
 		cp ${ROOTFS}/etc/dropbear/dropbear_rsa_host_key .
