@@ -5,11 +5,12 @@ software =
 
 	@@SWU_BOARD@@ = {
 		hardware-compatibility: [ "@@SWU_HWREVISION@@" ];
+
 		scripts: (
 		{
-			filename = "update.sh";
-			sha256 = "@update.sh";
-			type = "shellscript";
+			filename = "init_ubi";
+			sha256 = "@init_ubi";
+			type = "preinstall";
 		}
 		);
 

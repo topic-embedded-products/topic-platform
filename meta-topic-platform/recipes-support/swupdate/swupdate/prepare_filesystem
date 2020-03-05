@@ -30,7 +30,7 @@ then
 	exit 1
 fi
 
-mkdir -p $UPDATE_MOUNT
+test -d $UPDATE_MOUNT || mkdir -p $UPDATE_MOUNT
 mount $1 $UPDATE_MOUNT || true
 
 if grep -q "^\($ACTUAL_DEVICE\|$1\)" /proc/mounts

@@ -6,14 +6,14 @@ LICENSE = "CLOSED"
 
 IMAGEVERSION ?= "0"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/files/init-qspi-single-partition-AB-volumes:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/files/init-qspi-single-partition-AB-volumes:${THISDIR}/../../recipes-support/swupdate/swupdate:"
 
 # Add all local files to be added to the SWU
 # sw-description must always be in the list.
 # You can extend with scripts or wahtever you need
 SRC_URI = " \
     file://sw-description \
-    file://update.sh \
+    file://init_ubi \
     "
 
 IMAGE_DEPENDS = "virtual/bootloader"

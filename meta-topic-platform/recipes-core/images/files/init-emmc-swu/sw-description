@@ -1,0 +1,37 @@
+software =
+{
+	version = "@@IMAGEVERSION@@";
+	description = "eMMC Bootloader & partition init package for SWUpdate";
+
+	@@SWU_BOARD@@ = {
+		hardware-compatibility: [ "@@SWU_HWREVISION@@" ];
+
+		scripts: (
+		{
+			filename = "partition_sd_card.sh";
+			sha256 = "@partition_sd_card.sh";
+			type = "preinstall";
+			data = "/dev/mmcblk0"
+		}
+		);
+
+		files: (
+		{
+			filename = "boot.bin";
+			sha256 = "@boot.bin";
+			device = "/dev/mmcblk0p1";
+			filesystem = "vfat";
+			create-destination = "true";
+			path = "boot.bin";
+		},
+		{
+			filename = "@@UBOOTNAME@@";
+			sha256 = "@@@UBOOTNAME@@";
+			device = "/dev/mmcblk0p1";
+			filesystem = "vfat";
+			create-destination = "true";
+			path = "u-boot.@@UBOOT_SUFFIX@@";
+		}
+		);
+	}
+}

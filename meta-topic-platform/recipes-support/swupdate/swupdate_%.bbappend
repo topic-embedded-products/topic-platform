@@ -5,7 +5,7 @@ RDEPENDS_${PN} += "get-bootable-mbr-partition"
 # To create ext4 filesystems:
 RDEPENDS_${PN} += "e2fsprogs-mke2fs"
 # To create ubi structures
-RDEPENDS_${PN} += "mtd-utils"
+RDEPENDS_${PN} += "mtd-utils-ubifs"
 # To create partition tables
 RDEPENDS_${PN} += "parted"
 
@@ -17,6 +17,7 @@ SRC_URI += " \
 	file://create_mmc_links \
 	file://prepare_filesystem \
 	file://init_ubi \
+	file://partition_sd_card.sh \
 "
 
 do_install_append() {
@@ -31,6 +32,7 @@ do_install_append() {
 	install -m 0755 ${WORKDIR}/create_mmc_links ${D}${sbindir}
 	install -m 0755 ${WORKDIR}/prepare_filesystem ${D}${sbindir}
 	install -m 0755 ${WORKDIR}/init_ubi ${D}${sbindir}
+	install -m 0755 ${WORKDIR}/partition_sd_card.sh ${D}${sbindir}/partition_sd_card
 
 	# Replace 1MB image with something more modest
 	install -m 644 ${WORKDIR}/background.jpg ${D}/www/images/background.jpg
