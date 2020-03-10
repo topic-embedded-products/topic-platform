@@ -3,14 +3,15 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${META_ZYNQ_BASE}/COPYING;md5=751419260aa954499f7abaabaa882bbe"
 inherit allarch
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PV = "4"
+PV = "5"
 
 PACKAGES = "${PN}"
 SRC_URI = "file://udhcpd_up.sh file://udhcpd_down.sh file://udhcpd.*.conf"
 S = "${WORKDIR}"
 FILES_${PN} = "${sysconfdir}"
 
-RDEPENDS_${PN} = "ifplugd-auto-net"
+# Don't install ifplugd-auto-net on systemd
+RDEPENDS_${PN} = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'ifplugd-auto-net', d)}"
 
 do_compile() {
 }
