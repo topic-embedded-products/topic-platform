@@ -1,4 +1,5 @@
- #!/bin/sh -e
+#!/bin/sh -e
+export PATH=/usr/bin:/bin:/usr/sbin:/sbin
 CMD=$1
 if [ $# -ne 1 ]
 then
