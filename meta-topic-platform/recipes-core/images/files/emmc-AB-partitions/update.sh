@@ -13,6 +13,7 @@ then
 	prepare_filesystem /dev/emmc-rootfs-inactive /tmp/UPDATE-MOUNT
 elif [ "$CMD" = "postinst" ]
 then
+	swu-transfer-settings /tmp/UPDATE-MOUNT || true
 	switch_mmc_boot_partition /dev/emmc-rootfs-inactive
 	reboot
 else

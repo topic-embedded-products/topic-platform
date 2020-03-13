@@ -18,14 +18,18 @@ SRC_URI += " \
 	file://prepare_filesystem \
 	file://init_ubi \
 	file://partition_sd_card.sh \
+	file://swu-transfer-settings.sh \
+	file://swu-transfer-list \
 "
+
+CONFFILES_${PN} += "${sysconfdir}/swu-transfer-list"
 
 do_install_append() {
 	install -m 644 ${WORKDIR}/20-swupdate-arguments ${D}${libdir}/swupdate/conf.d/
-	if [ -e ${WORKDIR}/swupdate.cfg ] ; then
-		install -d ${D}${sysconfdir}
-		install -m 644 ${WORKDIR}/swupdate.cfg ${D}${sysconfdir}/swupdate.cfg
-	fi
+
+	install -d ${D}${sysconfdir}
+	install -m 644 ${WORKDIR}/swupdate.cfg ${D}${sysconfdir}/swupdate.cfg
+	install -m 0644 ${WORKDIR}/swu-transfer-list ${D}${sysconfdir}/swu-transfer-list
 
 	install -d ${D}${sbindir}
 	install -m 0755 ${WORKDIR}/switch_mmc_boot_partition ${D}${sbindir}
@@ -33,6 +37,7 @@ do_install_append() {
 	install -m 0755 ${WORKDIR}/prepare_filesystem ${D}${sbindir}
 	install -m 0755 ${WORKDIR}/init_ubi ${D}${sbindir}
 	install -m 0755 ${WORKDIR}/partition_sd_card.sh ${D}${sbindir}/partition_sd_card
+	install -m 0755 ${WORKDIR}/swu-transfer-settings.sh ${D}${sbindir}/swu-transfer-settings
 
 	# Replace 1MB image with something more modest
 	install -m 644 ${WORKDIR}/background.jpg ${D}/www/images/background.jpg
