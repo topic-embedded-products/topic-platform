@@ -22,6 +22,7 @@ MY_THINGS = "\
 	${@ 'mtd-utils-ubifs' if d.getVar('UBI_SUPPORT') == 'true' else ''} \
 	${@bb.utils.contains("IMAGE_FEATURES", "swupdate", d.getVar('SWUPDATE_THINGS'), "", d)} \
 	${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'udhcpd-iface-config', d)} \
+	${@bb.utils.contains("IMAGE_FEATURES", "package-management", "distro-feed-configs avahi-daemon", "", d)} \
 	"
 
 # Skip packagegroup-base to reduce the number of packages built. Thus, we need
