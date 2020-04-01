@@ -17,7 +17,7 @@ git clone http://github.com/topic-embedded-products/topic-platform.git
 cd topic-platform
 git submodule update --init
 
-meta-topic/scripts/init-oe.sh
+./scripts/init-oe.sh
 
 cd build
 
