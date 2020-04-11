@@ -8,7 +8,6 @@ software =
 		scripts: (
 		{
 			filename = "update.sh";
-			sha256 = "@update.sh";
 			type = "shellscript";
 		}
 		);
@@ -16,7 +15,6 @@ software =
 		images: (
 			{
 				filename = "@@ROOTFSNAME@@";
-				sha256 = "@@@ROOTFSNAME@@";
 				volume = "qspi-rootfs";
 			}
 		);

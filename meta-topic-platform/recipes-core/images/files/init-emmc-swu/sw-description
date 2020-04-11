@@ -9,7 +9,6 @@ software =
 		scripts: (
 		{
 			filename = "partition_sd_card.sh";
-			sha256 = "@partition_sd_card.sh";
 			type = "preinstall";
 			data = "/dev/mmcblk0"
 		}
@@ -18,7 +17,6 @@ software =
 		files: (
 		{
 			filename = "boot.bin";
-			sha256 = "@boot.bin";
 			device = "/dev/mmcblk0p1";
 			filesystem = "vfat";
 			create-destination = "true";
@@ -26,7 +24,6 @@ software =
 		},
 		{
 			filename = "@@UBOOTNAME@@";
-			sha256 = "@@@UBOOTNAME@@";
 			device = "/dev/mmcblk0p1";
 			filesystem = "vfat";
 			create-destination = "true";

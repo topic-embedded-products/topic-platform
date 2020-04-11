@@ -9,7 +9,6 @@ software =
 		scripts: (
 		{
 			filename = "init_ubi";
-			sha256 = "@init_ubi";
 			type = "preinstall";
 		}
 		);
@@ -17,13 +16,11 @@ software =
 		images: (
 			{
 				filename = "boot.bin";
-				sha256 = "@boot.bin";
 				device = "/dev/mtd0";
 				type = "flash";
 			},
 			{
 				filename = "@@UBOOTNAME@@";
-				sha256 = "@@@UBOOTNAME@@";
 				device = "/dev/mtd1";
 				type = "flash";
 			},
