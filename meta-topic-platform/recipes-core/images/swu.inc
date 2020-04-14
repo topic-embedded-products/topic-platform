@@ -5,7 +5,6 @@ LICENSE = "CLOSED"
 SWUPDATE_THINGS = "\
    swupdate \
    swupdate-www \
-   u-boot-fw-utils \
    kernel-devicetree \
    "
 
