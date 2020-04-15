@@ -12,6 +12,7 @@ IMAGE_FSTYPES = "tar.gz wic.gz ubifs"
 inherit core-image
 
 UBI_SUPPORT = "${@ 'true' if bb.utils.contains("IMAGE_FSTYPES", "ubi", True, False, d) or bb.utils.contains("IMAGE_FSTYPES", "ubifs", True, False, d) else 'false'}"
+WIC_SUPPORT = "${@ 'true' if bb.utils.contains("IMAGE_FSTYPES", "wic", True, False, d) or bb.utils.contains("IMAGE_FSTYPES", "wic.gz", True, False, d) else 'false'}"
 
 require ${@bb.utils.contains("IMAGE_FEATURES", "swupdate", "swu.inc", "", d)}
 
@@ -19,6 +20,7 @@ MY_THINGS = "\
 	kernel-devicetree \
 	${@bb.utils.contains('VIRTUAL-RUNTIME_dev_manager', 'busybox-mdev', 'modutils-loadscript', '', d)} \
 	${@ 'mtd-utils-ubifs' if d.getVar('UBI_SUPPORT') == 'true' else ''} \
+	${@ 'expand-wic-partition' if d.getVar('WIC_SUPPORT') == 'true' else ''} \
 	${@bb.utils.contains("IMAGE_FEATURES", "swupdate", d.getVar('SWUPDATE_THINGS'), "", d)} \
 	${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'udhcpd-iface-config', d)} \
 	${@bb.utils.contains("IMAGE_FEATURES", "package-management", "distro-feed-configs avahi-daemon", "", d)} \

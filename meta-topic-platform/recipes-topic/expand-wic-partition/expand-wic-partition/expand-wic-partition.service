@@ -1,0 +1,15 @@
+[Unit]
+Description=Expand WIC partition at first boot
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+ExecStart=@BINDIR@/expand-wic-partition.sh
+RemainAfterExit=yes
+KillMode=none
+SendSIGKILL=no
+TimeoutSec=300
+
+[Install]
+RequiredBy=systemd-modules-load.service
+WantedBy=multi-user.target
