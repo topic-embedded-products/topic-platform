@@ -1,0 +1,43 @@
+From 7e5cbc3b10b507cfb0a4e4c86d4a952cad7ee686 Mon Sep 17 00:00:00 2001
+From: Sunil Mohan Adapa <address@hidden>
+Date: Mon, 3 Apr 2017 14:31:43 +0530
+Subject: [PATCH] parted: Don't warn partition busy in script mode
+
+Script mode promises not to ask for input interactively.  However,
+during 'rm' and 'resizepart' operations, then a partition is mounted,
+parted asks for confirmation on the terminal.  Since upon confirmation
+parted allows the actual operations to proceed allow scripts to do
+this as well by assuming 'yes' in both the cases.
+
+Fixes the following issues:
+ - #22167
+ - #24215
+ - lpbug #1270203
+
+Signed-off-by: Sunil Mohan Adapa <address@hidden>
+---
+ parted/parted.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/parted/parted.c b/parted/parted.c
+index f27a035..a16ac16 100644
+--- a/parted/parted.c
++++ b/parted/parted.c
+@@ -1538,7 +1538,7 @@ do_resizepart (PedDevice** dev, PedDisk** diskp)
+ 
+         if (!command_line_get_partition (_("Partition number?"), disk, &part))
+                 goto error;
+-        if (!_partition_warn_busy (part))
++        if (!opt_script_mode && !_partition_warn_busy (part))
+                 goto error;
+ 
+         start = part->geom.start;
+@@ -1586,7 +1586,7 @@ do_rm (PedDevice** dev, PedDisk** diskp)
+ 
+         if (!command_line_get_partition (_("Partition number?"), *diskp, &part))
+                 goto error;
+-        if (!_partition_warn_busy (part))
++        if (!opt_script_mode && !_partition_warn_busy (part))
+                 goto error;
+ 
+         ped_disk_delete_partition (*diskp, part);
