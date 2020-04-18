@@ -2,9 +2,11 @@ DESCRIPTION = "Scripts to prepare filesystems on UBI and MMC"
 LICENSE = "CLOSED"
 
 # To create partition tables and ext4 filesystems:
-RDEPENDS:${PN} += "parted e2fsprogs-mke2fs"
+RDEPENDS_${PN} += "parted e2fsprogs-mke2fs"
 # To create ubi structures
 RDEPENDS:${PN} += "mtd-utils-ubifs"
+# to be able to update a live rootfs
+RDEPENDS:${PN} += "kexec"
 
 SRC_URI = "\
 	file://prepare_filesystem \

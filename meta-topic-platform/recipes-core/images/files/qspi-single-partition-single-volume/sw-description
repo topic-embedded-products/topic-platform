@@ -7,16 +7,27 @@ software =
 		hardware-compatibility: [ "@@SWU_HWREVISION@@" ];
 		scripts: (
 		{
-			filename = "update.sh";
-			type = "shellscript";
+			filename = "preinstall.sh";
+			type = "preinstall";
+		},
+		{
+			filename = "postinstall.sh";
+			type = "postinstall";
 		}
 		);
 
-		images: (
+
+		files: (
 			{
 				filename = "@@ROOTFSNAME@@";
-				volume = "qspi-rootfs";
-			}
+				path = "/tmp/qspi-rootfs.ubifs";
+				create-destination = "true";
+			},
+			{
+				filename = "update-initramfs-image-@@MACHINE@@.cpio";
+				path = "/tmp/update-initramfs-image.cpio";
+				create-destination = "true";
+			},
 		);
 	}
 }
