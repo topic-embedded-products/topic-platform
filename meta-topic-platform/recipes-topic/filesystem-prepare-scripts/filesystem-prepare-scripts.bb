@@ -5,6 +5,10 @@ LICENSE = "CLOSED"
 RDEPENDS_${PN} += "parted e2fsprogs-mke2fs"
 # To create ubi structures
 RDEPENDS_${PN} += "mtd-utils-ubifs"
+# to be able to update a live rootfs
+RDEPENDS_${PN} += "kexec"
+
+PV = "1"
 
 SRC_URI = "\
 	file://prepare_filesystem \
