@@ -53,9 +53,9 @@ echo ""
 parted --align optimal --script ${DEV} -- \
 	mklabel msdos \
 	mkpart primary fat16 1MiB 64MiB \
-	mkpart primary ext4 64MiB 25% \
-	mkpart primary ext4 25% 50% \
-	mkpart primary ext4 50% -1s \
+	mkpart primary ext4 64MiB 40% \
+	mkpart primary ext4 40% 80% \
+	mkpart primary ext4 80% -1s \
 	set 2 boot on
 
 # Wait until kernel reloaded partition table

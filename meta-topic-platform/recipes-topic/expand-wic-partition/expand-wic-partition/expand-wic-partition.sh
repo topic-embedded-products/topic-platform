@@ -12,9 +12,9 @@ then
 	touch /dev/nomount.${DEV_BASE}
 
 	parted --align optimal --script ${BLOCK_DEV} -- \
-		resizepart 2 25% \
-		mkpart primary ext4 25% 50% \
-		mkpart primary ext4 50% -1s
+		resizepart 2 40% \
+		mkpart primary ext4 40% 80% \
+		mkpart primary ext4 80% -1s
 
 	# Wait until kernel reloaded partition table
 	# The system is removing & adding the devices several times, therefore sleep for 2 seconds
