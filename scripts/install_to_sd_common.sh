@@ -51,27 +51,27 @@ else
     fi
 fi
 
-BLOCK_DEV=$(sed -n "s@^\(/dev/sd\w\+\|/dev/mmcblk[0-9]\+\)p*[0-9] ${MEDIA}/sd-rootfs-[a-b] .*\$@\1@p" /proc/mounts | uniq -d)
-if [ -z "$BLOCK_DEV" ]
-then
-	echo "${MEDIA}/sd-rootfs-* not found!"
-	exit 1
-fi
-
-BOOTABLE_PART=$(fdisk -l ${BLOCK_DEV} | sed -n 's@^/dev/\(sd[a-z]\|mmcblk[0-9]\+p\)\([0-9]\)\s\+\*\(.*\)$@\2@p')
-if [ "${BOOTABLE_PART}" = "2" ]
-then
-	ROOTFS=${MEDIA}/sd-rootfs-a
-elif [ "${BOOTABLE_PART}" = "3" ]
-then
-	ROOTFS=${MEDIA}/sd-rootfs-b
-else
-	echo "Unsupported bootable partition"
-	exit 1
-fi
-
 if $DO_ROOTFS
 then
+	BLOCK_DEV=$(sed -n "s@^\(/dev/sd\w\+\|/dev/mmcblk[0-9]\+\)p*[0-9] ${MEDIA}/sd-rootfs-[a-b] .*\$@\1@p" /proc/mounts | uniq -d)
+	if [ -z "$BLOCK_DEV" ]
+	then
+		echo "${MEDIA}/sd-rootfs-* not found!"
+		exit 1
+	fi
+
+	BOOTABLE_PART=$(fdisk -l ${BLOCK_DEV} | sed -n 's@^/dev/\(sd[a-z]\|mmcblk[0-9]\+p\)\([0-9]\)\s\+\*\(.*\)$@\2@p')
+	if [ "${BOOTABLE_PART}" = "2" ]
+	then
+		ROOTFS=${MEDIA}/sd-rootfs-a
+	elif [ "${BOOTABLE_PART}" = "3" ]
+	then
+		ROOTFS=${MEDIA}/sd-rootfs-b
+	else
+		echo "Unsupported bootable partition"
+		exit 1
+	fi
+
 	if [ -z "${IMAGE}" ]
 	then
 		echo "IMAGE environment is not set. Set it before calling this"
