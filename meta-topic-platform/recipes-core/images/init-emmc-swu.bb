@@ -5,7 +5,7 @@ SECTION = ""
 LICENSE = "CLOSED"
 
 # Only these machines have eMMC devices
-COMPATIBLE_MACHINE = "^tdkzu|^xdp"
+COMPATIBLE_MACHINE = "^tdkzu|^xdp|^ttp"
 
 IMAGEVERSION ?= "0"
 
