@@ -1,1 +1,1 @@
-../meta-topic-platform/recipes-support/swupdate/swupdate/partition_sd_card.sh
+../meta-topic-platform/recipes-topic/filesystem-prepare-scripts/filesystem-prepare-scripts/partition_sd_card.sh

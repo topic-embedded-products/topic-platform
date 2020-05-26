@@ -6,7 +6,7 @@ LICENSE = "CLOSED"
 
 IMAGEVERSION ?= "0"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/files/init-qspi-single-partition-AB-volumes:${THISDIR}/../../recipes-support/swupdate/swupdate:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/files/init-qspi-single-partition-AB-volumes:${THISDIR}/../../recipes-topic/filesystem-prepare-scripts/filesystem-prepare-scripts:"
 
 # Add all local files to be added to the SWU
 # sw-description must always be in the list.

@@ -30,7 +30,7 @@ fi
 # Ubuntu systems the partition table will be reloaded when writing to a block device
 # The partitions are wiped because the kernel otherwise tries to remount them after the
 # new partition table is written to the device
-DEVN="$(ls ${DEVP}[0-9] | sort -r) ${DEV}"
+DEVN="$(ls ${DEVP}[0-9] 2> /dev/null | sort -r) ${DEV}"
 for n in ${DEVN}
 do
 	echo "Wiping ${n}"
@@ -68,14 +68,15 @@ do
 	sleep 0.1
 done
 echo ""
+umount ${DEVP}[0-9] 2> /dev/null || true
 
 # format the DOS part
 mkfs.vfat -n "boot" ${DEVP}1
 
 # Format the Linux rootfs part
-mkfs.ext4 -m 0 -L "${PARTPREFIX}-rootfs-a" -O sparse_super,dir_index ${DEVP}2
-mkfs.ext4 -m 0 -L "${PARTPREFIX}-rootfs-b" -O sparse_super,dir_index ${DEVP}3
+mkfs.ext4 -F -m 0 -L "${PARTPREFIX}-rootfs-a" -O sparse_super,dir_index ${DEVP}2
+mkfs.ext4 -F -m 0 -L "${PARTPREFIX}-rootfs-b" -O sparse_super,dir_index ${DEVP}3
 
 # Format the Linux data part, optimize for large files
-mkfs.ext4 -m 0 -L "data" -O large_file,sparse_super,dir_index ${DEVP}4
+mkfs.ext4 -F -m 0 -L "data" -O large_file,sparse_super,dir_index ${DEVP}4
 

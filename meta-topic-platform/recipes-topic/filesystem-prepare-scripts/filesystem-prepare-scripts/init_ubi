@@ -1,0 +1,32 @@
+#!/bin/sh -e
+
+if [ $# -ne 2 ]
+then
+	echo "Usage $0 mtd_num num_of_volumes_to_create"
+	exit 1
+fi
+
+MTD=$1
+VOLUMES=$2
+
+if [ "$VOLUMES" -lt "1" ]
+then
+	echo "At least 1 volume should be created"
+	exit 1
+fi
+
+if [ -c "/dev/ubi0" ]
+then
+	ubidetach -m ${MTD} /dev/ubi_ctrl
+fi
+
+ubiformat /dev/mtd${MTD} -y
+ubiattach -m ${MTD} /dev/ubi_ctrl
+UBI_SIZE=$(ubinfo -a /dev/ubi0 | sed -n 's/^Amount of available logical eraseblocks: [0-9]\+ (\([0-9]\+\) bytes.*$/\1/p')
+VOL_SIZE=$(expr ${UBI_SIZE} / ${VOLUMES})
+ubimkvol /dev/ubi0 -N qspi-rootfs -s ${VOL_SIZE}
+CHARS="abcdefghijklmnopqrstuvwxyz"
+for s in $(seq 1 $(expr ${VOLUMES} - 1))
+do
+	ubimkvol /dev/ubi0 -N qspi-rootfs-${CHARS:${s}:1} -s ${VOL_SIZE}
+done

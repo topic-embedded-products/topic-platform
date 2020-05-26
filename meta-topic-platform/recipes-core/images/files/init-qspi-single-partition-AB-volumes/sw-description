@@ -9,6 +9,7 @@ software =
 		scripts: (
 		{
 			filename = "init_ubi";
+			data = "3 2";
 			type = "preinstall";
 		}
 		);

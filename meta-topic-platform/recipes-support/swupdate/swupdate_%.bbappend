@@ -2,10 +2,8 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 # To get and set active boot partition:
 RDEPENDS_${PN} += "get-bootable-mbr-partition"
-# To create partition tables and ext4 filesystems:
-RDEPENDS_${PN} += "parted e2fsprogs-mke2fs"
-# To create ubi structures
-RDEPENDS_${PN} += "mtd-utils-ubifs"
+# Scripts to prepare various filesystems
+RDEPENDS_${PN} += "filesystem-prepare-scripts"
 
 # Using "swupdate.config" because ".cfg" would trigger merge_config
 SRC_URI += "\
@@ -15,9 +13,6 @@ SRC_URI += "\
 	file://swupdate.config \
 	file://switch_mmc_boot_partition \
 	file://create_mmc_links \
-	file://prepare_filesystem \
-	file://init_ubi \
-	file://partition_sd_card.sh \
 	file://swu-transfer-settings.sh \
 	file://swu-transfer-list \
 "
@@ -37,9 +32,6 @@ do_install_append() {
 	install -d ${D}${sbindir}
 	install -m 0755 ${WORKDIR}/switch_mmc_boot_partition ${D}${sbindir}
 	install -m 0755 ${WORKDIR}/create_mmc_links ${D}${sbindir}
-	install -m 0755 ${WORKDIR}/prepare_filesystem ${D}${sbindir}
-	install -m 0755 ${WORKDIR}/init_ubi ${D}${sbindir}
-	install -m 0755 ${WORKDIR}/partition_sd_card.sh ${D}${sbindir}/partition_sd_card
 	install -m 0755 ${WORKDIR}/swu-transfer-settings.sh ${D}${sbindir}/swu-transfer-settings
 
 	# Replace 1MB image with something more modest

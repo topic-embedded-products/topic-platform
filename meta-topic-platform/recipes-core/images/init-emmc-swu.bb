@@ -9,7 +9,7 @@ COMPATIBLE_MACHINE = "^tdkzu|^xdp|^ttp"
 
 IMAGEVERSION ?= "0"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/files/init-emmc-swu:${THISDIR}/../../recipes-support/swupdate/swupdate:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/files/init-emmc-swu:${THISDIR}/../../recipes-topic/filesystem-prepare-scripts/filesystem-prepare-scripts:"
 
 # Add all local files to be added to the SWU
 # sw-description must always be in the list.

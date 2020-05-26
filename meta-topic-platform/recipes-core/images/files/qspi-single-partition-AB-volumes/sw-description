@@ -15,7 +15,7 @@ software =
 		images: (
 			{
 				filename = "@@ROOTFSNAME@@";
-				volume = "qspi-rootfs-r";
+				volume = "qspi-rootfs-b";
 				properties: {
 					replaces = "qspi-rootfs";
 				}
