@@ -68,8 +68,9 @@ then
 	then
 		ROOTFS=${MEDIA}/sd-rootfs-b
 	else
-		echo "Unsupported bootable partition"
-		exit 1
+		echo "Setting sd-rootfs-a as bootable partition"
+		parted ${BLOCK_DEV} set 2 boot on
+		ROOTFS=${MEDIA}/sd-rootfs-a
 	fi
 
 	if [ -z "${IMAGE}" ]
