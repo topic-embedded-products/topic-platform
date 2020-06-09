@@ -56,7 +56,7 @@ parted --align optimal --script ${DEV} -- \
 	mkpart primary ext4 64MiB 40% \
 	mkpart primary ext4 40% 80% \
 	mkpart primary ext4 80% -1s \
-	set 2 boot on
+	set ${BOOTABLE_PARTITION_NUMBER:-2} boot on
 
 # Wait until kernel reloaded partition table
 # The system is removing & adding the devices several times, therefore sleep for 1 second
