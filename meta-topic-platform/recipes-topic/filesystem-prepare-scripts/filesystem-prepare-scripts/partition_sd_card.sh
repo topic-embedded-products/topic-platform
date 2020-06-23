@@ -35,7 +35,7 @@ for n in ${DEVN}
 do
 	echo "Wiping ${n}"
 	umount $n 2>/dev/null || true
-	dd if=/dev/zero of=$n bs=8192 count=1 2>/dev/null
+	dd if=/dev/zero of=$n bs=8192 status=none count=1
 done
 
 # Wait until kernel reloaded partition table
