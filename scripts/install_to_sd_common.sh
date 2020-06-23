@@ -197,7 +197,7 @@ then
 			umount $p
 			if [ -d $p ]
 			then
-				rmdir $p
+				rmdir $p || true
 			fi
 		fi
 	done
