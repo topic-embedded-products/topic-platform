@@ -183,6 +183,10 @@ then
 		echo "Copying loadable modules directory to boot partition..."
 		cp -r ${ROOTFS}/usr/share/loadable_modules ${MEDIA_BOOT}
 	fi
+
+	cd ${ROOTFS}
+	${ROOTFS_FIXUP_COMMANDS}
+	cd ..
 fi
 
 if $DO_UNMOUNT
