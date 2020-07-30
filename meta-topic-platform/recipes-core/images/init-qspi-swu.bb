@@ -4,8 +4,6 @@ SUMMARY ?= "QSPI Bootloader & partition init package for SWUpdate"
 SECTION = ""
 LICENSE = "CLOSED"
 
-IMAGEVERSION ?= "0"
-
 FILESEXTRAPATHS_prepend := "${THISDIR}/files/init-qspi-single-partition-AB-volumes:${THISDIR}/../../recipes-topic/filesystem-prepare-scripts/filesystem-prepare-scripts:"
 
 # Add all local files to be added to the SWU

@@ -4,8 +4,6 @@ SUMMARY ?= "Image for SWUpdate"
 SECTION = ""
 LICENSE = "CLOSED"
 
-IMAGEVERSION ?= "0"
-
 FILESEXTRAPATHS_prepend := "${THISDIR}/files/emmc-AB-partitions:"
 
 # Add all local files to be added to the SWU
