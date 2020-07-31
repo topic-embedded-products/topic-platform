@@ -1,0 +1,6 @@
+[Unit]
+Description=usb media swupdate service
+Requires=swupdate-progress.service
+
+[Service]
+ExecStart=/usr/sbin/swu-hotplug.sh /dev/%I /run/avahi-daemon/pid
