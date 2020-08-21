@@ -44,6 +44,8 @@ IMAGE_INSTALL = "\
 # Reduce dropbear host key size to reduce boot time by about 5 seconds
 DROPBEAR_RSAKEY_SIZE="1024"
 
+DEVICETREELINKS ??= "system.dtb ${DEVICETREE}"
+
 # Postprocessing to reduce the amount of work to be done
 # by configuration scripts
 myimage_rootfs_postprocess() {
@@ -70,7 +72,14 @@ myimage_rootfs_postprocess() {
 		ln -s ../run ${IMAGE_ROOTFS}/var/run
 	fi
 
-	ln -s ${DEVICETREE} ${IMAGE_ROOTFS}/boot/system.dtb
+	echo -e "${DEVICETREELINKS}" | while read LINK TARGET
+	do
+		if [ -n "${TARGET}" ]
+		then
+			echo "DT: ${LINK}->${TARGET}"
+			ln -s ${TARGET} ${IMAGE_ROOTFS}/boot/${LINK}
+		fi
+	done
 
 	echo 'DROPBEAR_RSAKEY_ARGS="-s ${DROPBEAR_RSAKEY_SIZE}"' >> ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear
 }
