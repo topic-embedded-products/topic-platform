@@ -1,2 +1,3 @@
 /etc/dropbear
 /etc/hostname
+/etc/NetworkManager/system-connections
