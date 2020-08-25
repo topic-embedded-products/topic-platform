@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Start WPA on provided IFACE. When it associates, this generates a cable plug
+# event and that triggers ifup to start DHCP on it.
+
+case "$1" in
+	start)
+		/usr/sbin/wpa_supplicant -B -P /var/run/wpa_supplicant.${IFACE}.pid -i ${IFACE} -c /etc/wpa_supplicant.conf -D nl80211
+		;;
+	stop)
+		if [ -e /var/run/wpa_supplicant.${IFACE}.pid ]
+		then
+			kill `cat /var/run/wpa_supplicant.${IFACE}.pid`
+			rm /var/run/wpa_supplicant.${IFACE}.pid
+		fi
+		;;
+	*)
+		echo "Usage: IFACE=wlanX $0 {start|stop}"
+		exit 1
+		;;
+esac
+
+exit 0

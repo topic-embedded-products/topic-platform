@@ -4,10 +4,8 @@
 auto lo
 iface lo inet loopback
 
-# Wireless interfaces
+# Wireless interfaces (WPA handled by /etc/ifplugd.wlan0)
 iface wlan0 inet dhcp
-	wpa-driver nl80211
-	wpa-conf /etc/wpa_supplicant.conf
 
 # Wired interfaces
 iface eth0 inet dhcp
