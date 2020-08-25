@@ -25,6 +25,7 @@ MY_THINGS = "\
 	${@bb.utils.contains("IMAGE_FEATURES", "swupdate", d.getVar('SWUPDATE_THINGS'), "", d)} \
 	${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'udhcpd-iface-config', d)} \
 	${@bb.utils.contains("IMAGE_FEATURES", "package-management", "distro-feed-configs avahi-daemon", "", d)} \
+	${@bb.utils.contains('MACHINE_FEATURES', 'wifi', 'packagegroup-base-wifi', '', d)} \
 	"
 
 # Skip packagegroup-base to reduce the number of packages built. Thus, we need
