@@ -19,7 +19,8 @@ pipeline {
         }
 
         stage('Publish artifacts') {
-            steps {
+              when { branch 'master' } // Only run this step on the master branch
+              steps {
                 archiveArtifacts artifacts: 'build/artefacts/*', onlyIfSuccessful: true
             }
         }
