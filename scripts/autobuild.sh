@@ -1,4 +1,5 @@
 #!/bin/sh -e
+git submodule update --init --recursive
 if [ ! -d build ]
 then
   echo "First time build - creating folders"

@@ -13,7 +13,6 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                checkout scm
                 sh 'scripts/autobuild.sh'
             }
         }
