@@ -24,5 +24,12 @@ pipeline {
                 archiveArtifacts artifacts: 'build/artefacts/*', onlyIfSuccessful: true
             }
         }
+
+        stage('Update downloads') {
+            when { branch 'release' }
+            steps {
+                sh 'scripts/release-downloads.sh'
+            }
+        }
     }
 }
