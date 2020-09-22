@@ -2,3 +2,4 @@
 /etc/hostname
 /etc/wpa_supplicant.conf
 /etc/NetworkManager/system-connections
+/var/lib/bluetooth
