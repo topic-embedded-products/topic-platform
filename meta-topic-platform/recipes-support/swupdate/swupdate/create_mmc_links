@@ -1,9 +1,11 @@
 #!/bin/sh -e
 for block in /dev/mmcblk[0-9]
 do
-	boot_partition=$(get-bootable-mbr-partition ${block})
 	for partition_name in $(blkid ${block}p[0-9] | sed -n "s@^${block}p\([0-9]\).*LABEL=\"\(emmc\|sd\)-rootfs-[ab]\".*@\1|\2@p")
 	do
+		# Execute get-bootable-mbr-partition only for block devices with a relevant label
+		# get-bootable-mbr-partition will return and print errors for devices without a MBR record
+		boot_partition=$(get-bootable-mbr-partition ${block})
 		partition=${partition_name%|*}
 		name=${partition_name##*|}
 		type="inactive"
