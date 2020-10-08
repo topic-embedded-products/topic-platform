@@ -6,7 +6,6 @@ SWUPDATE_THINGS = "\
    swupdate \
    swupdate-www \
    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'swupdate-usb swupdate-progress', '', d)} \
-   kernel-devicetree \
    "
 
 rootfs_add_swu_metadata() {
