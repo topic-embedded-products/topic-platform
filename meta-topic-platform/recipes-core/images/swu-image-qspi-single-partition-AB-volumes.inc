@@ -14,10 +14,13 @@ SRC_URI = " \
     file://update.sh \
     "
 
-IMAGE_DEPENDS = "${BASENAME}-image virtual/kernel"
+# Backward compatible
+# Strip away "-swu-qspi" suffix to get default image name
+IMAGENAME ?= "${@'${PN}'[:-9]}"
+IMAGE_DEPENDS = "${IMAGENAME} virtual/kernel"
 
 # Only one @@...@@ per line gets replaced, so combine them here
-ROOTFSNAME = "${BASENAME}-image-${MACHINE}.rootfs.ubifs"
+ROOTFSNAME = "${IMAGENAME}-${MACHINE}.rootfs.ubifs"
 
 # images and files that will be included in the .swu image
 SWUPDATE_IMAGES = "${ROOTFSNAME}"

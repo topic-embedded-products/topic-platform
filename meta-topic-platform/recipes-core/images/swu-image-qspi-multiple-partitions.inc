@@ -14,11 +14,13 @@ SRC_URI = " \
     file://update.sh \
     "
 
+# Strip away "-swu-qspi" suffix to get default image name
+IMAGENAME ?= "${@'${PN}'[:-9]}"
 # images to build before building swupdate image
-IMAGE_DEPENDS = "${BASENAME}-image-squashfs virtual/kernel"
+IMAGE_DEPENDS = "${IMAGENAME}-squashfs virtual/kernel"
 
 # Only one @@...@@ per line gets replaced, som combine them here
-ROOTFSNAME = "${BASENAME}-image-squashfs-${MACHINE}"
+ROOTFSNAME = "${IMAGENAME}-squashfs-${MACHINE}"
 
 # images and files that will be included in the .swu image
 SWUPDATE_KERNEL = "${KERNEL_IMAGETYPE}-${MACHINE}.bin"
