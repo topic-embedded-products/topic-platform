@@ -17,7 +17,6 @@ WIC_SUPPORT = "${@ 'true' if bb.utils.contains("IMAGE_FSTYPES", "wic", True, Fal
 require ${@bb.utils.contains("IMAGE_FEATURES", "swupdate", "swu.inc", "", d)}
 
 MY_THINGS = "\
-	kernel-devicetree \
 	kernel-image \
 	${@bb.utils.contains('VIRTUAL-RUNTIME_dev_manager', 'busybox-mdev', 'modutils-loadscript', '', d)} \
 	${@ 'mtd-utils-ubifs' if d.getVar('UBI_SUPPORT') == 'true' else ''} \
