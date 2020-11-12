@@ -14,9 +14,31 @@ then
 	echo "sudo dpkg-reconfigure dash"
 	exit 1
 fi
+if [ -d project-spec ]
+then
+	echo "Setting up for petalinux"
+	for LAYER in meta-swupdate meta-topic meta-topic-platform
+	do
+		if ! grep -q "\${proot}/topic-platform/${LAYER}" "project-spec/configs/config"
+		then
+			echo "${LAYER} not setup"		
+			echo "Please add topic platform to petalinux repos in 'project-spec/configs/config': "
+			echo "CONFIG_USER_LAYER_0=\"\${proot}/project-spec/meta-user\""
+			echo "CONFIG_USER_LAYER_1=\"\${proot}/topic-platform/meta-swupdate\""
+			echo "CONFIG_USER_LAYER_2=\"\${proot}/topic-platform/meta-topic\""
+			echo "CONFIG_USER_LAYER_3=\"\${proot}/topic-platform/meta-topic-platform\""
+      echo "CONFIG_USER_LAYER_4=\"\${proot}/topic-platform/meta-xilinx/meta-xilinx-standalone\""
+			echo "CONFIG_USER_LAYER_5=\"\""
+			exit 1
+		fi
+	done
+	echo "Run petalinux-build to build your design"
+	exit 0
+fi
 if [ ! -d oe-core ]
 then
 	echo "Please run this as './scripts/init-oe.sh' from the top directory."
+	echo "or if petalinux run this as './topic-platform/scripts/init-oe.sh' from the top directory."
 	exit 1
 fi
 if [ ! -e oe-core/.git ]
