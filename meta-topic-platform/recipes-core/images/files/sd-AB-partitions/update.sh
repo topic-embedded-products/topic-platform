@@ -15,6 +15,7 @@ elif [ "$CMD" = "postinst" ]
 then
 	swu-transfer-settings /tmp/UPDATE-MOUNT || true
 	switch_mmc_boot_partition /dev/sd-rootfs-inactive
+	sync
 	reboot
 else
 	echo "Invalid command"
