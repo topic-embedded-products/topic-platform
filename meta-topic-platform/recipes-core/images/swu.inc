@@ -17,3 +17,6 @@ rootfs_add_swu_metadata() {
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "rootfs_add_swu_metadata;"
+
+# Resolve manifest error in case this image gets included in another image
+deltask do_packagedata

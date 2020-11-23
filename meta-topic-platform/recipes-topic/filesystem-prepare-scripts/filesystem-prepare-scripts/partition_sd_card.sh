@@ -40,7 +40,6 @@ done
 
 # Wait until kernel reloaded partition table
 echo -n "Waiting for partition table to reload "
-sync ${DEVN}
 partprobe ${DEV}
 while [ -e "${DEVP}1" ] || [ -e "${DEVP}2" ] || [ -e "${DEVP}3" ]
 do

@@ -1,6 +1,6 @@
-require swu-revision.inc
+require swu-image.inc
 
-SUMMARY ?= "QSPI Bootloader & partition init package for SWUpdate"
+SUMMARY = "eMMC Bootloader & partition init package for SWUpdate"
 SECTION = ""
 LICENSE = "CLOSED"
 
@@ -17,7 +17,9 @@ SRC_URI = " \
     file://partition_sd_card.sh \
     "
 
-IMAGE_DEPENDS = "virtual/bootloader"
+# Define the dependencies of this image without using IMAGE_DEPENDS to avoid
+# issues with nested images (see 009593f0c35213f6b4c4dc299d8e46b2033887de)
+do_swuimage[depends] = "virtual/bootloader:do_deploy"
 
 # images and files that will be included in the .swu image
 SWUPDATE_IMAGES = "boot u-boot"
@@ -29,5 +31,3 @@ UBOOTNAME = "u-boot-${MACHINE}.${UBOOT_SUFFIX}"
 SWUPDATE_IMAGES_FSTYPES[boot] = ".bin"
 SWUPDATE_IMAGES_NOAPPEND_MACHINE[boot] = "1"
 SWUPDATE_IMAGES_FSTYPES[u-boot] = ".${UBOOT_SUFFIX}"
-
-inherit swupdate
