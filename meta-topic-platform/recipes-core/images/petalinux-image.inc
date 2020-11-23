@@ -11,7 +11,7 @@ IMAGE_FSTYPES += " wic "
 
 
 require ${@bb.utils.contains("IMAGE_FEATURES", "swupdate", "swu.inc", "", d)}
-
+#distro-feed-configs is not support by petalinux
 IMAGE_INSTALL_append = "\
   packagegroup-base \
 	bootscript \
@@ -25,7 +25,7 @@ IMAGE_INSTALL_append = "\
 	${@ 'expand-wic-partition' if d.getVar('WIC_SUPPORT') == 'true' else ''} \
 	${@bb.utils.contains("IMAGE_FEATURES", "swupdate", d.getVar('SWUPDATE_THINGS'), "", d)} \
 	${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'udhcpd-iface-config', d)} \
-	${@bb.utils.contains("IMAGE_FEATURES", "package-management", "distro-feed-configs avahi-daemon", "", d)} \
+	${@bb.utils.contains("IMAGE_FEATURES", "package-management", " avahi-daemon", "", d)} \
 	${@bb.utils.contains('MACHINE_FEATURES', 'wifi', 'packagegroup-base-wifi', '', d)} \
 	"
 
