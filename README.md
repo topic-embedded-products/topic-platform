@@ -80,7 +80,7 @@ hold the image and little more, and you cannot use SWUpdate to install new image
 
 The topic-platform based images can be upgraded or replaced with a different image using SWUpdate.
 
-To install a new image, direct a browser to the board's address or name at port 80, the hostname
+To install a new image, direct a browser to the board's address or name at port 8080, the hostname
 defaults to the machine name, so something like this should work:
 http://tdkzu9.local:8080/
 Select or drag the "swu" image into the installation box to install a new image.

@@ -1,8 +1,7 @@
-require swu-revision.inc
+require swu-image.inc
 
-SUMMARY ?= "QSPI Bootloader & partition init package for SWUpdate"
+SUMMARY = "QSPI Bootloader & partition init package for SWUpdate"
 SECTION = ""
-LICENSE = "CLOSED"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files/init-qspi-single-partition-AB-volumes:${THISDIR}/../../recipes-topic/filesystem-prepare-scripts/filesystem-prepare-scripts:"
 
@@ -14,7 +13,9 @@ SRC_URI = " \
     file://init_ubi \
     "
 
-IMAGE_DEPENDS = "virtual/bootloader"
+# Define the dependencies of this image without using IMAGE_DEPENDS to avoid
+# issues with nested images (see 009593f0c35213f6b4c4dc299d8e46b2033887de)
+do_swuimage[depends] = "virtual/bootloader:do_deploy"
 
 # images and files that will be included in the .swu image
 SWUPDATE_IMAGES = "boot u-boot"

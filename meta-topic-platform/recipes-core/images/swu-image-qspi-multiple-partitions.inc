@@ -1,18 +1,6 @@
-require swu-revision.inc
-
-SUMMARY ?= "Image for SWUpdate"
-SECTION = ""
-LICENSE = "CLOSED"
+require swu-image.inc
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files/qspi-multiple-partitions:"
-
-# Add all local files to be added to the SWU
-# sw-description must always be in the list.
-# You can extend with scripts or wahtever you need
-SRC_URI = " \
-    file://sw-description \
-    file://update.sh \
-    "
 
 # Strip away "-swu-qspi" suffix to get default image name
 IMAGENAME ?= "${@'${PN}'[:-9]}"
@@ -25,7 +13,6 @@ ROOTFSNAME = "${IMAGENAME}-squashfs-${MACHINE}"
 # images and files that will be included in the .swu image
 SWUPDATE_KERNEL = "${KERNEL_IMAGETYPE}-${MACHINE}.bin"
 SWUPDATE_IMAGES = "${ROOTFSNAME} ${SWUPDATE_KERNEL} ${DEVICETREE}"
-
 
 python () {
     # SWUPDATE_IMAGES_FSTYPES[${ROOTFSNAME}] = ".rootfs.squashfs-lzo"
@@ -41,5 +28,3 @@ python () {
         # SWUPDATE_IMAGES_FSTYPES[uImage] = ".bin"
         d.setVarFlag("SWUPDATE_IMAGES_FSTYPES", "uImage", ".bin")
 }
-
-inherit swupdate
