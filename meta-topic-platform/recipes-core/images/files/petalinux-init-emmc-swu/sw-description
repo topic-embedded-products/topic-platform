@@ -1,0 +1,27 @@
+software =
+{
+	version = "@@IMAGEVERSION@@";
+	description = "eMMC Bootloader & partition init package for SWUpdate";
+
+	@@SWU_BOARD@@ = {
+		hardware-compatibility: [ "@@SWU_HWREVISION@@" ];
+
+		scripts: (
+		{
+			filename = "partition_sd_card.sh";
+			type = "preinstall";
+			data = "/dev/mmcblk0"
+		}
+		);
+
+		files: (
+		{
+			filename = "@@BOOTLOADNAME@@";
+			device = "/dev/mmcblk0p1";
+			filesystem = "vfat";
+			create-destination = "true";
+			path = "BOOT.BIN";
+		}
+		);
+	}
+}

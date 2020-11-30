@@ -16,6 +16,8 @@ IMAGE_INSTALL_append = "\
   packagegroup-base \
 	bootscript \
 	swupdate \
+	busybox \
+  	xilinx-bootbin \
 	${MACHINE_EXTRA_RRECOMMENDS} \
 	${IMAGE_INSTALL_MACHINE_EXTRAS} \
 	${ROOTFS_PKGMANAGE} \
