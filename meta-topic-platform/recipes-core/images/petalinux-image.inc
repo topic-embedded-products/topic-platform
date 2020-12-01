@@ -17,7 +17,12 @@ IMAGE_INSTALL_append = "\
 	bootscript \
 	swupdate \
 	busybox \
-  	xilinx-bootbin \
+	xilinx-bootbin \
+        packagegroup-core-boot \
+        packagegroup-core-ssh-dropbear \
+        packagegroup-distro-base \
+	networkmanager \
+	memtester \
 	${MACHINE_EXTRA_RRECOMMENDS} \
 	${IMAGE_INSTALL_MACHINE_EXTRAS} \
 	${ROOTFS_PKGMANAGE} \
