@@ -17,10 +17,6 @@ IMAGE_INSTALL_append = "\
 	bootscript \
 	swupdate \
 	busybox \
-	xilinx-bootbin \
-        packagegroup-core-boot \
-        packagegroup-core-ssh-dropbear \
-        packagegroup-distro-base \
 	networkmanager \
 	memtester \
 	${MACHINE_EXTRA_RRECOMMENDS} \
