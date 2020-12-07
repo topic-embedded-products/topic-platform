@@ -21,6 +21,8 @@ IMAGE_DEPENDS = "${IMAGENAME} virtual/kernel"
 
 # Only one @@...@@ per line gets replaced, so combine them here
 ROOTFSNAME = "${IMAGENAME}-${MACHINE}.rootfs.ubifs"
+ROOTFSNAME_petalinux = "${IMAGENAME}-${MACHINE}.ubifs"
+
 
 # images and files that will be included in the .swu image
 SWUPDATE_IMAGES = "${ROOTFSNAME}"

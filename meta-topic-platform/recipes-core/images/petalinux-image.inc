@@ -6,7 +6,7 @@ DEPENDS += "${DISTRO_EXTRA_DEPENDS} ${MACHINE_EXTRA_DEPENDS}"
 IMAGE_FEATURES[validitems] += "swupdate"
 IMAGE_FEATURES += "package-management ssh-server-dropbear swupdate"
 
-IMAGE_FSTYPES += " wic "
+IMAGE_FSTYPES += " tar.gz wic ubifs "
 
 
 
@@ -19,6 +19,7 @@ IMAGE_INSTALL_append = "\
 	busybox \
 	networkmanager \
 	memtester \
+	mtd-utils-ubifs \
 	${MACHINE_EXTRA_RRECOMMENDS} \
 	${IMAGE_INSTALL_MACHINE_EXTRAS} \
 	${ROOTFS_PKGMANAGE} \

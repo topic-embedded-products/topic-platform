@@ -1,0 +1,25 @@
+software =
+{
+	version = "@@IMAGEVERSION@@";
+	description = "QSPI Bootloader & partition init package for SWUpdate";
+
+	@@SWU_BOARD@@ = {
+		hardware-compatibility: [ "@@SWU_HWREVISION@@" ];
+
+		scripts: (
+		{
+			filename = "init_ubi";
+			data = "3 2";
+			type = "preinstall";
+		}
+		);
+
+		images: (
+			{
+				filename = "boot.bin";
+				device = "/dev/mtd4";
+				type = "flash";
+			},
+		);
+	}
+}
