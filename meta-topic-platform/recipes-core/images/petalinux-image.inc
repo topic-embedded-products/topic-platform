@@ -20,6 +20,7 @@ IMAGE_INSTALL_append = "\
 	networkmanager \
 	memtester \
 	mtd-utils-ubifs \
+	udev \
 	${MACHINE_EXTRA_RRECOMMENDS} \
 	${IMAGE_INSTALL_MACHINE_EXTRAS} \
 	${ROOTFS_PKGMANAGE} \
