@@ -6,7 +6,7 @@ pipeline {
     agent {
         node {
             label 'openembedded'
-            customWorkspace 'topic-platform-zeus2020'
+            // customWorkspace 'topic-platform-zeus2020'
         }
     }
 
