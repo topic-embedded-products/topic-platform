@@ -81,5 +81,5 @@ petalinux_rootfs_postprocess() {
 ROOTFS_POSTPROCESS_COMMAND += "petalinux_rootfs_postprocess ; "
 
 
-
+require ../../../project-spec/meta-user/recipes-core/images/user-config.inc
 
