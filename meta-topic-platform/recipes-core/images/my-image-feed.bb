@@ -13,6 +13,7 @@ IMAGES_SD = "my-image-swu-sd"
 
 EXTRA_IMAGES ?= ""
 EXTRA_IMAGES_topic-miami = "${IMAGES_QSPI} ${IMAGES_SD}"
+EXTRA_IMAGES_topic-miamilite = "${IMAGES_QSPI} ${IMAGES_SD}"
 EXTRA_IMAGES_topic-miamimp = "${IMAGES_QSPI} ${IMAGES_SD} ${IMAGES_EMMC}"
 EXTRA_IMAGES_xdpzu7 = "${IMAGES_QSPI} ${IMAGES_EMMC}"
 
