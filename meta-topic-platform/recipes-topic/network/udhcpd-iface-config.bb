@@ -6,7 +6,10 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PV = "5"
 
 PACKAGES = "${PN}"
-SRC_URI = "file://udhcpd_up.sh file://udhcpd_down.sh file://udhcpd.*.conf"
+SRC_URI = "\
+	file://udhcpd_up.sh file://udhcpd_down.sh \
+	file://udhcpd.usb0.conf file://udhcpd.wlan1.conf \
+	"
 S = "${WORKDIR}"
 FILES_${PN} = "${sysconfdir}"
 
