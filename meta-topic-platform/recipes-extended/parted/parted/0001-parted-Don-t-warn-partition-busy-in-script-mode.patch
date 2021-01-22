@@ -20,10 +20,10 @@ Signed-off-by: Sunil Mohan Adapa <address@hidden>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/parted/parted.c b/parted/parted.c
-index f27a035..a16ac16 100644
+index 9dcdb05..f0f59c8 100644
 --- a/parted/parted.c
 +++ b/parted/parted.c
-@@ -1538,7 +1538,7 @@ do_resizepart (PedDevice** dev, PedDisk** diskp)
+@@ -1560,7 +1560,7 @@ do_resizepart (PedDevice** dev, PedDisk** diskp)
  
          if (!command_line_get_partition (_("Partition number?"), disk, &part))
                  goto error;
@@ -32,7 +32,7 @@ index f27a035..a16ac16 100644
                  goto error;
  
          start = part->geom.start;
-@@ -1586,7 +1586,7 @@ do_rm (PedDevice** dev, PedDisk** diskp)
+@@ -1611,7 +1611,7 @@ do_rm (PedDevice** dev, PedDisk** diskp)
  
          if (!command_line_get_partition (_("Partition number?"), *diskp, &part))
                  goto error;
@@ -40,4 +40,4 @@ index f27a035..a16ac16 100644
 +        if (!opt_script_mode && !_partition_warn_busy (part))
                  goto error;
  
-         ped_disk_delete_partition (*diskp, part);
+         if (!ped_disk_delete_partition (*diskp, part))
