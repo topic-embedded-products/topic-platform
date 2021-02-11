@@ -201,7 +201,7 @@ then
 			umount $p
 			if [ -d $p ]
 			then
-				rmdir $p || true
+				rmdir $p 2>/dev/null || true
 			fi
 		fi
 	done
