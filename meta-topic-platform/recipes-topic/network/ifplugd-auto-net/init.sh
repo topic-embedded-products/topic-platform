@@ -10,11 +10,15 @@ start)
 	for i in $IFPLUGDLIST
 	do
 		echo -n " $i"
-		if [ -x /etc/ifplugd.$i ]
-		then
-			IFACE=$i /etc/ifplugd.$i $1
-		fi
-		ifplugd -i $i -r /etc/ifplugd.auto
+		export i
+		(
+			flock -n 9 || exit 0
+			if [ -x /etc/ifplugd.$i ]
+			then
+				IFACE=$i /etc/ifplugd.$i $1
+			fi
+			ifplugd -i $i -r /etc/ifplugd.auto
+		) 9> /run/ifplugd.$i.lock
 	done
 	echo "."
 	;;
@@ -29,6 +33,7 @@ stop)
 		then
 			IFACE=$i /etc/ifplugd.$i $1
 		fi
+		rm -f /run/ifplugd.$i.run
 	done
 	echo "."
 	;;
