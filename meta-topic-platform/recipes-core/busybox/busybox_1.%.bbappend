@@ -1,6 +1,7 @@
 SRC_URI += "\
 	file://inetd file://inetd.conf \
 	file://mdev file://mdev.conf file://mdev-defaults \
+	file://mdev-network.sh \
 	"
 
 do_install:append() {
@@ -9,6 +10,7 @@ do_install:append() {
 	fi
 	install -d ${D}${sysconfdir}/default
 	install -m 644 ${WORKDIR}/mdev-defaults ${D}${sysconfdir}/default/mdev
+	install -m 755 ${WORKDIR}/mdev-network.sh ${D}${sysconfdir}/mdev/
 }
 
 FILES:${PN}-mdev += "${sysconfdir}/default/mdev"
