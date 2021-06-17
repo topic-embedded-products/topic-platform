@@ -5,7 +5,7 @@
 
 case "$1" in
 	start)
-		/usr/sbin/wpa_supplicant -B -P /var/run/wpa_supplicant.${IFACE}.pid -i ${IFACE} -c /etc/wpa_supplicant.conf -D nl80211
+		/usr/sbin/wpa_supplicant -B -P /var/run/wpa_supplicant.${IFACE}.pid -i ${IFACE} -c /etc/wpa_supplicant.conf -D nl80211,wext
 		;;
 	stop)
 		if [ -e /var/run/wpa_supplicant.${IFACE}.pid ]
