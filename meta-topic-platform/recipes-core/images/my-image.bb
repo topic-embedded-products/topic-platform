@@ -36,7 +36,7 @@ IMAGE_INSTALL_MACHINE_EXTRAS ?= "packagegroup-machine-base"
 
 IMAGE_INSTALL = "\
 	packagegroup-core-boot \
-	packagegroup-core-ssh-dropbear \
+	${@bb.utils.contains("IMAGE_FEATURES", "ssh-server-dropbear", "packagegroup-core-ssh-dropbear", "", d)} \
 	packagegroup-distro-base \
 	bootscript \
 	${IMAGE_INSTALL_MACHINE_EXTRAS} \
