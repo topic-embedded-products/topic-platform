@@ -4,6 +4,13 @@ SUMMARY ?= "Image for SWUpdate"
 SECTION = ""
 LICENSE = "CLOSED"
 
+# The version as stored in the sw-description file.
+# sw-description is created by including swu.inc in the image
+python () {
+    import subprocess
+    d.setVar('IMAGEVERSION', subprocess.check_output(['git', 'rev-parse', '--verify', 'HEAD']).decode('ascii').rstrip())
+}
+
 # Add all local files to be added to the SWU.
 # sw-description must always be in the list.
 # It can be extended with wathever file is
