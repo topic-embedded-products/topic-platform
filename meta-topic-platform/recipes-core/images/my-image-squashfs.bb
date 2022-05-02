@@ -7,4 +7,4 @@ IMAGE_FSTYPES = "squashfs-xz"
 
 # No packaging, pointless on a read-only system
 ROOTFS_PKGMANAGE = ""
-IMAGE_FEATURES_remove = "package-management"
+IMAGE_FEATURES:remove = "package-management"

@@ -3,7 +3,7 @@ require swu-image.inc
 SUMMARY = "QSPI Bootloader & partition init package for SWUpdate"
 SECTION = ""
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/files/init-qspi-single-partition-AB-volumes:${THISDIR}/../../recipes-topic/filesystem-prepare-scripts/filesystem-prepare-scripts:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files/init-qspi-single-partition-AB-volumes:${THISDIR}/../../recipes-topic/filesystem-prepare-scripts/filesystem-prepare-scripts:"
 
 # Add all local files to be added to the SWU
 # sw-description must always be in the list.

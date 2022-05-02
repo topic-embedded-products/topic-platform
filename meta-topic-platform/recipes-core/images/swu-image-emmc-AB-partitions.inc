@@ -1,6 +1,6 @@
 require swu-image.inc
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/files/emmc-AB-partitions:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files/emmc-AB-partitions:"
 
 # Strip away "-swu-emmc" suffix to get default image name
 IMAGENAME ?= "${@'${PN}'[:-9]}"

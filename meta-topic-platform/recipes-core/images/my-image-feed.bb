@@ -12,9 +12,9 @@ IMAGES_EMMC = "init-emmc-swu my-image-swu-emmc"
 IMAGES_SD = "my-image-swu-sd"
 
 EXTRA_IMAGES ?= ""
-EXTRA_IMAGES_topic-miami = "${IMAGES_QSPI} ${IMAGES_SD}"
-EXTRA_IMAGES_topic-miamimp = "${IMAGES_QSPI} ${IMAGES_SD} ${IMAGES_EMMC}"
-EXTRA_IMAGES_xdpzu7 = "${IMAGES_QSPI} ${IMAGES_EMMC}"
+EXTRA_IMAGES:topic-miami = "${IMAGES_QSPI} ${IMAGES_SD}"
+EXTRA_IMAGES:topic-miamimp = "${IMAGES_QSPI} ${IMAGES_SD} ${IMAGES_EMMC}"
+EXTRA_IMAGES:xdpzu7 = "${IMAGES_QSPI} ${IMAGES_EMMC}"
 
 DEPENDS += "${EXTRA_IMAGES}"
 

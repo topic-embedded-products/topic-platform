@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0;md5=801f80980d171dd6425
 SRC_URI = "file://init file://${BPN}.service file://${BPN}.sh"
 S = "${WORKDIR}"
 
-RDEPENDS_${PN} += "\
+RDEPENDS:${PN} += "\
 	e2fsprogs-resize2fs \
 	e2fsprogs-tune2fs \
 	e2fsprogs-mke2fs \
@@ -17,13 +17,13 @@ inherit allarch update-rc.d systemd
 INITSCRIPT_NAME = "${BPN}.sh"
 INITSCRIPT_PARAMS = "start 08 S ."
 
-SYSTEMD_SERVICE_${PN} = "${BPN}.service"
+SYSTEMD_SERVICE:${PN} = "${BPN}.service"
 
 do_compile() {
 	true
 }
 
-FILES_${PN} = "${bindir} ${sysconfdir} ${systemd_unitdir}"
+FILES:${PN} = "${bindir} ${sysconfdir} ${systemd_unitdir}"
 
 do_install() {
 	install -d ${D}${bindir}

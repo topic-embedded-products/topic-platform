@@ -9,7 +9,7 @@ SRC_URI = "file://init.sh file://ifplugd.auto file://ifplugd.wlan0"
 
 S = "${WORKDIR}"
 PACKAGES = "${PN}"
-FILES_${PN} = "${sysconfdir}"
+FILES:${PN} = "${sysconfdir}"
 
 # Startup similar to init-ifupdown
 INITSCRIPT_NAME = "ifplug-auto-net.sh"

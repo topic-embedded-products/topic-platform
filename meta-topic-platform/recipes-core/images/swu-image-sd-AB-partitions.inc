@@ -1,6 +1,6 @@
 require swu-image.inc
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/files/sd-AB-partitions:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files/sd-AB-partitions:"
 
 # Strip away "-swu-sd" suffix to get default image name
 IMAGENAME ?= "${@'${PN}'[:-7]}"

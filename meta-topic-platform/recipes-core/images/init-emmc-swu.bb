@@ -7,7 +7,7 @@ LICENSE = "CLOSED"
 # Only these machines have eMMC devices
 COMPATIBLE_MACHINE = "^td[kp]zu|^xdp|^ttp"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/files/init-emmc-swu:${THISDIR}/../../recipes-topic/filesystem-prepare-scripts/filesystem-prepare-scripts:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files/init-emmc-swu:${THISDIR}/../../recipes-topic/filesystem-prepare-scripts/filesystem-prepare-scripts:"
 
 # Add all local files to be added to the SWU
 # sw-description must always be in the list.

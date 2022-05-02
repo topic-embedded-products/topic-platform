@@ -1,6 +1,6 @@
 require swu-image.inc
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/files/qspi-multiple-partitions:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files/qspi-multiple-partitions:"
 
 # Strip away "-swu-qspi" suffix to get default image name
 IMAGENAME ?= "${@'${PN}'[:-9]}"

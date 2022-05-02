@@ -11,10 +11,10 @@ SRC_URI = "\
 	file://udhcpd.usb0.conf file://udhcpd.wlan1.conf \
 	"
 S = "${WORKDIR}"
-FILES_${PN} = "${sysconfdir}"
+FILES:${PN} = "${sysconfdir}"
 
 # Don't install ifplugd-auto-net on systemd
-RDEPENDS_${PN} = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'ifplugd-auto-net', d)}"
+RDEPENDS:${PN} = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'ifplugd-auto-net', d)}"
 
 do_compile() {
 }

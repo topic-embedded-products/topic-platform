@@ -1,9 +1,9 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 # To get and set active boot partition:
-RDEPENDS_${PN} += "get-bootable-mbr-partition"
+RDEPENDS:${PN} += "get-bootable-mbr-partition"
 # Scripts to prepare various filesystems
-RDEPENDS_${PN} += "filesystem-prepare-scripts"
+RDEPENDS:${PN} += "filesystem-prepare-scripts"
 
 # Using "swupdate.config" because ".cfg" would trigger merge_config
 SRC_URI += "\
@@ -18,14 +18,14 @@ SRC_URI += "\
 	file://swu-transfer-list \
 "
 
-FILES_${PN}-usb += "${sbindir}/swu-hotplug.sh"
+FILES:${PN}-usb += "${sbindir}/swu-hotplug.sh"
 
 # swupdate recipe does not take fragments into account, only defconfig
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"
 
-CONFFILES_${PN} += "${sysconfdir}/swu-transfer-list"
+CONFFILES:${PN} += "${sysconfdir}/swu-transfer-list"
 
-do_install_append() {
+do_install:append() {
 	install -m 644 ${WORKDIR}/20-swupdate-arguments ${D}${libdir}/swupdate/conf.d/
 
 	install -d ${D}${sysconfdir}
