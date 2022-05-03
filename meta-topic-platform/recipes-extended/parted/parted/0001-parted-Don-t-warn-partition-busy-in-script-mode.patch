@@ -1,4 +1,4 @@
-From 7e5cbc3b10b507cfb0a4e4c86d4a952cad7ee686 Mon Sep 17 00:00:00 2001
+From 2ec5aab8252bd3dbfa5712d01f04766bdbab3135 Mon Sep 17 00:00:00 2001
 From: Sunil Mohan Adapa <address@hidden>
 Date: Mon, 3 Apr 2017 14:31:43 +0530
 Subject: [PATCH] parted: Don't warn partition busy in script mode
@@ -16,28 +16,22 @@ Fixes the following issues:
 
 Signed-off-by: Sunil Mohan Adapa <address@hidden>
 ---
- parted/parted.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ parted/parted.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/parted/parted.c b/parted/parted.c
-index 9dcdb05..f0f59c8 100644
+index e84e66d..407ac00 100644
 --- a/parted/parted.c
 +++ b/parted/parted.c
-@@ -1560,7 +1560,7 @@ do_resizepart (PedDevice** dev, PedDisk** diskp)
- 
-         if (!command_line_get_partition (_("Partition number?"), disk, &part))
-                 goto error;
--        if (!_partition_warn_busy (part))
-+        if (!opt_script_mode && !_partition_warn_busy (part))
-                 goto error;
- 
-         start = part->geom.start;
-@@ -1611,7 +1611,7 @@ do_rm (PedDevice** dev, PedDisk** diskp)
- 
-         if (!command_line_get_partition (_("Partition number?"), *diskp, &part))
-                 goto error;
--        if (!_partition_warn_busy (part))
-+        if (!opt_script_mode && !_partition_warn_busy (part))
-                 goto error;
- 
-         if (!ped_disk_delete_partition (*diskp, part))
+@@ -231,7 +231,7 @@ _partition_warn_busy (PedPartition* part)
+                             PED_EXCEPTION_YES_NO,
+                             _("Partition %s is being used. Are you sure you " \
+                               "want to continue?"),
+-                            path) != PED_EXCEPTION_YES)
++                            path) != PED_EXCEPTION_YES && !opt_script_mode)
+                 {
+                         free (path);
+                         return 0;
+-- 
+2.17.1
+
