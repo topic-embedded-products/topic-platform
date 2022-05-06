@@ -10,7 +10,7 @@ IMAGENAME ?= "${@'${PN}'[:-9]}"
 do_swuimage[depends] = "${IMAGENAME}:do_image_complete"
 
 # Only one @@...@@ per line gets replaced, so combine them here
-ROOTFSNAME = "${IMAGENAME}-${MACHINE}.rootfs.ubifs"
+ROOTFSNAME = "${IMAGENAME}-${MACHINE}.ubifs"
 
 # images and files that will be included in the .swu image
 SWUPDATE_IMAGES = "${ROOTFSNAME}"
