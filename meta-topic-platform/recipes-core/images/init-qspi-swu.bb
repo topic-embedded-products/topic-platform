@@ -3,7 +3,8 @@ require swu-image.inc
 SUMMARY = "QSPI Bootloader & partition init package for SWUpdate"
 SECTION = ""
 
-FILESEXTRAPATHS:prepend := "${THISDIR}/files/init-qspi-single-partition-AB-volumes:${THISDIR}/../../recipes-topic/filesystem-prepare-scripts/filesystem-prepare-scripts:"
+SWU_QSPI_PARTITIONING ?= "AB-volumes"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files/init-qspi-single-partition-${SWU_QSPI_PARTITIONING}:${THISDIR}/../../recipes-topic/filesystem-prepare-scripts/filesystem-prepare-scripts:"
 
 # Add all local files to be added to the SWU
 # sw-description must always be in the list.
@@ -22,6 +23,9 @@ SWUPDATE_IMAGES = "boot u-boot"
 
 # Only one @@...@@ per line gets replaced, so combine them here
 UBOOTNAME = "u-boot-${MACHINE}.${UBOOT_SUFFIX}"
+UBOOTOFFSET ?= "0x60000"
+UBOOTOFFSET:zynq = "0x20000"
+UBOOTOFFSET:zynqmp = "0x60000"
 
 # a deployable image can have multiple format, choose one
 SWUPDATE_IMAGES_FSTYPES[boot] = ".bin"
