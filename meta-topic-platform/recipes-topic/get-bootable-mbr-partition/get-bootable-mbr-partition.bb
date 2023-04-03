@@ -5,7 +5,8 @@ inherit gitpkgv
 PKGV = "${GITPKGVTAG}"
 
 SRCREV = "6ced184ba3c21afd225eab70106e25bc5917c147"
-SRC_URI = "git://github.com/topic-embedded-products/${BPN}"
+BRANCH = "master"
+SRC_URI = "git://github.com/topic-embedded-products/${BPN};branch=${BRANCH};protocol=https"
 
 S = "${WORKDIR}/git"
 
