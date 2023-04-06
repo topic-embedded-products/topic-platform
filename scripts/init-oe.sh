@@ -28,12 +28,15 @@ if [ ! -d ${BUILDDIR}/conf ]
 then
 	mkdir -p ${BUILDDIR}/conf
 fi
-if [ ! -f ${BUILDDIR}/conf/local.conf ]
+# local.conf must be a symbolic link
+if [ ! -h ${BUILDDIR}/conf/local.conf ]
 then
-	cp -rp scripts/templates/build/* ${BUILDDIR}/
-	# Make bblayers.conf a symlink so it's under version control
-	rm ${BUILDDIR}/conf/bblayers.conf
+	# Remove existing links, if any
+	rm -f ${BUILDDIR}/conf/bblayers.conf ${BUILDDIR}/profile ${BUILDDIR}/conf/local.conf
+	# Make symlinks so they are under version control
 	ln -s ../../scripts/templates/build/conf/bblayers.conf ${BUILDDIR}/conf/bblayers.conf
+	ln -s ../scripts/templates/build/profile ${BUILDDIR}/profile
+	ln -s ../../scripts/templates/build/conf/local.conf ${BUILDDIR}/conf/local.conf
 fi
 cd oe-core
 source ./oe-init-build-env ../${BUILDDIR} ../bitbake
