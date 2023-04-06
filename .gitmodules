@@ -16,3 +16,6 @@
 [submodule "meta-swupdate"]
 	path = meta-swupdate
 	url = https://github.com/sbabic/meta-swupdate
+[submodule "meta-xilinx-tools"]
+	path = meta-xilinx-tools
+	url = https://github.com/Xilinx/meta-xilinx-tools.git

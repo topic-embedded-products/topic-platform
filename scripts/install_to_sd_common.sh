@@ -134,7 +134,7 @@ fi
 if [ -e ${IMAGE_ROOT}/${BOOT_BIN} ]
 then
 	cp ${IMAGE_ROOT}/${BOOT_BIN} ${MEDIA_BOOT}/BOOT.BIN
-	for fn in u-boot.img u-boot.bin u-boot.itb
+	for fn in u-boot.img u-boot.itb
 	do
 		if [ -e ${IMAGE_ROOT}/${fn} ]
 		then
