@@ -1,6 +1,6 @@
 SECTION = "base"
 DESCRIPTION = "SWUpdate UBI scripts"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://run-qspi-update.sh;beginline=2;endline=2;md5=3b6e5b2caf81c241a5956ed7691327ab"
 SRC_URI = "file://run-qspi-update.sh"
 PV = "0"

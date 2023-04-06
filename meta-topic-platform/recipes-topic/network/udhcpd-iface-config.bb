@@ -1,5 +1,5 @@
 SUMMARY = "Supplies interface-based startup of DHCP server udhcpd"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://${META_ZYNQ_BASE}/COPYING;md5=751419260aa954499f7abaabaa882bbe"
 inherit allarch
 PACKAGE_ARCH = "${MACHINE_ARCH}"
