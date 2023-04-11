@@ -9,7 +9,7 @@ software =
 		scripts: (
 		{
 			filename = "init_ubi";
-			data = "1 1";
+			data = "@@SWU_QSPI_PARTITIONS@@";
 			type = "preinstall";
 		}
 		);

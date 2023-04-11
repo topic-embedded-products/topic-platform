@@ -9,22 +9,16 @@ software =
 		scripts: (
 		{
 			filename = "init_ubi";
-			data = "1 2";
+			data = "@@SWU_QSPI_PARTITIONS@@";
 			type = "preinstall";
 		}
 		);
 
 		images: (
 			{
-				filename = "@@UBOOTNAME@@";
-				device = "/dev/mtd0";
-				type = "flash";
-				offset = "@@UBOOTOFFSET@@";
-			},
-			{
 				filename = "boot.bin";
 				device = "/dev/mtd0";
-				/* Don't say type=flash here or it will erase the whole device again */
+				type = "flash";
 			},
 		);
 	}
