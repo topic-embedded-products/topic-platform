@@ -34,11 +34,13 @@ MY_THINGS = "\
 # to include the MACHINE_EXTRA_ stuff ourselves.
 IMAGE_INSTALL_MACHINE_EXTRAS ?= "packagegroup-machine-base"
 
+# libgcc added to avoid errors like "libgcc_s.so.1 must be installed for pthread_exit to work"
 IMAGE_INSTALL = "\
 	packagegroup-core-boot \
 	${@bb.utils.contains("IMAGE_FEATURES", "ssh-server-dropbear", "packagegroup-core-ssh-dropbear", "", d)} \
 	packagegroup-distro-base \
 	bootscript \
+	libgcc \
 	${IMAGE_INSTALL_MACHINE_EXTRAS} \
 	${ROOTFS_PKGMANAGE} \
 	${MY_THINGS} \
