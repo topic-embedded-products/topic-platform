@@ -16,7 +16,7 @@ SRC_URI = " \
 
 # Define the dependencies of this image without using IMAGE_DEPENDS to avoid
 # issues with nested images (see 009593f0c35213f6b4c4dc299d8e46b2033887de)
-do_swuimage[depends] = "virtual/bootloader:do_deploy"
+do_swuimage[depends] = "virtual/boot-bin:do_deploy"
 
 # images and files that will be included in the .swu image
 SWUPDATE_IMAGES = "boot u-boot"
