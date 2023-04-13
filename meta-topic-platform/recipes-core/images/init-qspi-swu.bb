@@ -1,10 +1,11 @@
-require swu-image.inc
+require init-common-swu.inc
 
 SUMMARY = "QSPI Bootloader & partition init package for SWUpdate"
-SECTION = ""
 
-SWU_QSPI_PARTITIONING ?= "AB-volumes"
-FILESEXTRAPATHS:prepend := "${THISDIR}/files/init-qspi-single-partition-${SWU_QSPI_PARTITIONING}:${THISDIR}/../../recipes-topic/filesystem-prepare-scripts/filesystem-prepare-scripts:"
+# Default to 2 volumes
+SWU_QSPI_PARTITIONS ?= "1 2"
+
+FILESEXTRAPATHS:prepend := "${THISDIR}/files/init-qspi-single-partition-${SWU_BOOT_TYPE}:"
 
 # Add all local files to be added to the SWU
 # sw-description must always be in the list.
@@ -14,22 +15,6 @@ SRC_URI = " \
     file://init_ubi \
     "
 
-# Define the dependencies of this image without using IMAGE_DEPENDS to avoid
-# issues with nested images (see 009593f0c35213f6b4c4dc299d8e46b2033887de)
-do_swuimage[depends] = "virtual/boot-bin:do_deploy"
-
-# images and files that will be included in the .swu image
-SWUPDATE_IMAGES = "boot u-boot"
-
-# Only one @@...@@ per line gets replaced, so combine them here
-UBOOTNAME = "u-boot-${MACHINE}.${UBOOT_SUFFIX}"
 UBOOTOFFSET ?= "0x60000"
 UBOOTOFFSET:zynq = "0x20000"
 UBOOTOFFSET:zynqmp = "0x60000"
-
-# a deployable image can have multiple format, choose one
-SWUPDATE_IMAGES_FSTYPES[boot] = ".bin"
-SWUPDATE_IMAGES_NOAPPEND_MACHINE[boot] = "1"
-SWUPDATE_IMAGES_FSTYPES[u-boot] = ".${UBOOT_SUFFIX}"
-
-inherit swupdate

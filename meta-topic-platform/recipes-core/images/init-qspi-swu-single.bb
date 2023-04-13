@@ -1,2 +1,2 @@
-SWU_QSPI_PARTITIONING = "single-volume"
+SWU_QSPI_PARTITIONS ?= "1 1"
 require init-qspi-swu.bb
