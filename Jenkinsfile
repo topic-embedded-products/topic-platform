@@ -18,8 +18,13 @@ pipeline {
         }
 
         stage('Publish artifacts') {
-              when { branch 'master' } // Only run this step on the master branch
-              steps {
+            when {
+                anyOf {
+                    branch 'master';
+                    branch 'langdale';
+                }
+            }
+            steps {
                 archiveArtifacts artifacts: 'build/artefacts/*', onlyIfSuccessful: true
             }
         }
