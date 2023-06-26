@@ -42,7 +42,6 @@ IMAGE_INSTALL = "\
 	bootscript \
 	libgcc \
 	${IMAGE_INSTALL_MACHINE_EXTRAS} \
-	${ROOTFS_PKGMANAGE} \
 	${MY_THINGS} \
 	"
 
