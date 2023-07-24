@@ -1,0 +1,24 @@
+software =
+{
+	version = "@@IMAGEVERSION@@";
+	description = "Firmware update for topic-platform";
+
+	@@SWU_BOARD@@ = {
+		hardware-compatibility: [ "@@SWU_HWREVISION@@" ];
+		scripts: (
+		{
+			filename = "update.sh";
+			type = "shellscript";
+			data = "@@BLOCKDEV@@";
+		}
+		);
+
+		files: (
+		{
+			filename = "@@ROOTFSNAME@@";
+			device = "/dev/block-rootfs-inactive";
+			@@ROOTFSATTRS@@ 
+		}
+		);
+	}
+}

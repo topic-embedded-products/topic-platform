@@ -7,9 +7,13 @@ DEPENDS += "${DISTRO_EXTRA_DEPENDS} ${MACHINE_EXTRA_DEPENDS}"
 IMAGE_FEATURES[validitems] += "swupdate"
 IMAGE_FEATURES += "package-management ssh-server-dropbear swupdate"
 
-IMAGE_FSTYPES = "tar.gz wic ubifs"
+IMAGE_FSTYPES = "ext4.gz tar.gz wic ubifs"
 
 inherit core-image
+
+# For ext4 images, they're resized to >1GB so use settings appropriate for that
+# In particular, use at least 4k blocks, and reduce reserved blocks to 0%
+EXTRA_IMAGECMD:ext4 += "-b -4096 -m 0"
 
 UBI_SUPPORT = "${@ 'true' if bb.utils.contains("IMAGE_FSTYPES", "ubi", True, False, d) or bb.utils.contains("IMAGE_FSTYPES", "ubifs", True, False, d) else 'false'}"
 WIC_SUPPORT = "${@ 'true' if bb.utils.contains("IMAGE_FSTYPES", "wic", True, False, d) or bb.utils.contains("IMAGE_FSTYPES", "wic.gz", True, False, d) else 'false'}"
