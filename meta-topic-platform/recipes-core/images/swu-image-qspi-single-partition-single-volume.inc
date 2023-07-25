@@ -2,9 +2,6 @@ require swu-image.inc
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files/qspi-single-partition-single-volume:"
 
-# Strip away "-swu-qspi" suffix to get default image name
-IMAGENAME ?= "${@'${PN}'[:-9]}"
-
 # Replace update script
 SRC_URI = "\
     file://sw-description \

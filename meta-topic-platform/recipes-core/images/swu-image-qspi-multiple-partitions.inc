@@ -2,8 +2,6 @@ require swu-image.inc
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files/qspi-multiple-partitions:"
 
-# Strip away "-swu-qspi" suffix to get default image name
-IMAGENAME ?= "${@'${PN}'[:-9]}"
 # images to build before building swupdate image
 IMAGE_DEPENDS = "${IMAGENAME}-squashfs virtual/kernel"
 

@@ -2,9 +2,6 @@ require swu-image.inc
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files/qspi-single-partition-AB-volumes:"
 
-# Strip away "-swu-qspi" suffix to get default image name
-IMAGENAME ?= "${@'${PN}'[:-9]}"
-
 # Define the dependencies of this image without using IMAGE_DEPENDS to avoid
 # issues with nested images (see 009593f0c35213f6b4c4dc299d8e46b2033887de)
 do_swuimage[depends] = "${IMAGENAME}:do_image_complete"

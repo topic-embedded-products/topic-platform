@@ -2,9 +2,6 @@ require swu-image.inc
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files/block-AB-partitions:"
 
-# Strip away "-swu-device" suffix to get default image name
-IMAGENAME ?= "${@'-'.join('${PN}'.split('-')[:-2])}"
-
 # Last wordk is the block device
 BLOCKDEV = "${@'${PN}'.split('-')[-1]}"
 

@@ -4,6 +4,9 @@ SUMMARY ?= "Image for SWUpdate"
 SECTION = ""
 LICENSE = "CLOSED"
 
+# Strip away "-swu-device" suffix to get default image name
+IMAGENAME ?= "${@'${PN}'.split('-swu-')[0]}"
+
 # The version as stored in the sw-description file.
 # sw-description is created by including swu.inc in the image
 python () {
