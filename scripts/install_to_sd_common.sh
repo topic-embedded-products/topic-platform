@@ -10,10 +10,15 @@ do
 	elif [ "$1" == "-b" ]
 	then
 		DO_ROOTFS=false
+	elif [ "$1" == "-d" ]
+	then
+		shift
+		BLOCK_DEV="$1"
 	else
-		echo "Usage: $0 [-n] [-b]"
+		echo "Usage: $0 [-n] [-b] [-d device]"
 		echo "-b  Write boot partition only, don't write the rootfs"
 		echo "-n  Do not unmount media after writing"
+		echo "-d  Device to upgrade, e.g. /dev/sdb"
 		exit 1
 	fi
 	shift
@@ -30,6 +35,11 @@ fi
 if [ -z "${IMAGE_ROOT}" ]
 then
 	IMAGE_ROOT=tmp-glibc/deploy/images/${MACHINE}
+fi
+
+if [ -z "${ROOTFSTYPE}" ]
+then
+	ROOTFSTYPE=tar.gz
 fi
 
 # Ubuntu <14 uses /media for mounts, Ubuntu 14 uses /media/$USER
@@ -53,25 +63,32 @@ fi
 
 if $DO_ROOTFS
 then
-	BLOCK_DEV=$(sed -n "s@^\(/dev/sd\w\+\|/dev/mmcblk[0-9]\+\)p*[0-9] ${MEDIA}/sd-rootfs-[a-b] .*\$@\1@p" /proc/mounts | uniq -d)
 	if [ -z "$BLOCK_DEV" ]
 	then
-		echo "${MEDIA}/sd-rootfs-* not found!"
+		BLOCK_DEV=$(sed -n "s@^\(/dev/sd\w\+\|/dev/mmcblk[0-9]\+\)p*[0-9] ${MEDIA}/sd-rootfs-[a-b] .*\$@\1@p" /proc/mounts | uniq -d)
+	fi
+	if [ -z "$BLOCK_DEV" ]
+	then
+		echo "${MEDIA}/sd-rootfs-* not found, and no target specified."
+		echo "Insert media or specify target device using -d"
 		exit 1
 	fi
 
 	BOOTABLE_PART=$(fdisk -l ${BLOCK_DEV} | sed -n 's@^/dev/\(sd[a-z]\|mmcblk[0-9]\+p\)\([0-9]\)\s\+\*\(.*\)$@\2@p')
 	if [ "${BOOTABLE_PART}" = "2" ]
 	then
-		ROOTFS=${MEDIA}/sd-rootfs-a
+		ROOTLABEL=sd-rootfs-a
 	elif [ "${BOOTABLE_PART}" = "3" ]
 	then
-		ROOTFS=${MEDIA}/sd-rootfs-b
+		ROOTLABEL=sd-rootfs-b
 	else
 		echo "Setting sd-rootfs-a as bootable partition"
 		parted ${BLOCK_DEV} set 2 boot on
-		ROOTFS=${MEDIA}/sd-rootfs-a
+		ROOTLABEL=sd-rootfs-a
+		BOOTABLE_PART=2
 	fi
+	ROOTFS=${MEDIA}/${ROOTLABEL}
+	BLOCK_DEV_ROOT="${BLOCK_DEV}${BOOTABLE_PART}"
 
 	if [ -z "${IMAGE}" ]
 	then
@@ -81,18 +98,18 @@ then
 		exit 1
 	fi
 
-	if [ ! -w ${ROOTFS} ]
+	if [ ! -w ${BLOCK_DEV_ROOT} ]
 	then
-		echo "${ROOTFS} is not accesible. Are you root (sudo me),"
+		echo "${BLOCK_DEV_ROOT} is not accesible. Are you root (sudo me),"
 		echo "is the SD card inserted, and did you partition and"
 		echo "format it with partition_sd_card.sh?"
 		exit 1
 	fi
 
-	if [ ! -f ${IMAGE_ROOT}/${IMAGE}-${MACHINE}.tar.gz ]
+	if [ ! -f ${IMAGE_ROOT}/${IMAGE}-${MACHINE}.${ROOTFSTYPE} ]
 	then
 		echo "Image '${IMAGE}' does not exist, cannot flash it."
-		echo ${IMAGE_ROOT}/${IMAGE}-${MACHINE}.tar.gz
+		echo ${IMAGE_ROOT}/${IMAGE}-${MACHINE}.${ROOTFSTYPE}
 		exit 1
 	fi
 fi
@@ -160,33 +177,69 @@ then
 		done
 	fi
 
+	RESIZE_ROOTFS=true
+	REMOUNT=true
+	FIXUP_ROOTFS=false
 	echo "Writing ${ROOTFS}..."
-	if [ ! -f dropbear_rsa_host_key -a -f ${ROOTFS}/etc/dropbear/dropbear_rsa_host_key ]
-	then
-		cp ${ROOTFS}/etc/dropbear/dropbear_rsa_host_key .
-		chmod 666 dropbear_rsa_host_key
-	fi
-	rm -rf ${ROOTFS}/*
-	tar xzf ${IMAGE_ROOT}/${IMAGE}-${MACHINE}.tar.gz -C ${ROOTFS}
 	if [ -f dropbear_rsa_host_key ]
 	then
-		install -d ${ROOTFS}/etc/dropbear
-		install -m 600 dropbear_rsa_host_key ${ROOTFS}/etc/dropbear/dropbear_rsa_host_key
+		FIXUP_ROOTFS=true
+	else
+		if [  -f ${ROOTFS}/etc/dropbear/dropbear_rsa_host_key ]
+		then
+			cp ${ROOTFS}/etc/dropbear/dropbear_rsa_host_key .
+			chmod 666 dropbear_rsa_host_key
+			FIXUP_ROOTFS=true
+		fi
 	fi
-	if [ ! -z "${FPGA_BOOT_IMAGE}" ]
+	case ${ROOTFSTYPE} in
+		tar*)
+			rm -rf ${ROOTFS}/*
+			tar xaf ${IMAGE_ROOT}/${IMAGE}-${MACHINE}.${ROOTFSTYPE} -C ${ROOTFS}
+			REMOUNT=false
+			RESIZE_ROOTFS=false
+			;;
+		*.gz)
+			umount ${ROOTFS} 2> /dev/null || umount ${BLOCK_DEV_ROOT}
+			zcat ${IMAGE_ROOT}/${IMAGE}-${MACHINE}.${ROOTFSTYPE} | dd of=${BLOCK_DEV_ROOT} bs=1M
+			;;
+		*.xz)
+			umount ${ROOTFS} 2> /dev/null || umount ${BLOCK_DEV_ROOT}
+			xzcat ${IMAGE_ROOT}/${IMAGE}-${MACHINE}.${ROOTFSTYPE} | dd of=${BLOCK_DEV_ROOT} bs=1M
+			;;
+		squashfs*)
+			umount ${ROOTFS} 2> /dev/null || umount ${BLOCK_DEV_ROOT}
+			dd if=${IMAGE_ROOT}/${IMAGE}-${MACHINE}.${ROOTFSTYPE} of=${BLOCK_DEV_ROOT} bs=1M
+			REMOUNT=false
+			FIXUP_ROOTFS=false
+			RESIZE_ROOTFS=false
+			;;
+		*)
+			umount ${ROOTFS} 2> /dev/null || umount ${BLOCK_DEV_ROOT}
+			dd if=${IMAGE_ROOT}/${IMAGE}-${MACHINE}.${ROOTFSTYPE} of=${BLOCK_DEV_ROOT} bs=1M
+			;;
+	esac
+
+	if ${RESIZE_ROOTFS}
 	then
-		cp ${ROOTFS}/${FPGA_BOOT_IMAGE} ${MEDIA_BOOT}/fpga.bin
+		tune2fs -L ${ROOTLABEL} ${BLOCK_DEV_ROOT} || echo "Could not set label"
+		resize2fs ${BLOCK_DEV_ROOT} || echo "could not resize filesystem"
 	fi
 
-	if [ "${COPY_LOADABLE_MODULES}" = "1" ]
+	if ${REMOUNT} && ${FIXUP_ROOTFS}
 	then
-		echo "Copying loadable modules directory to boot partition..."
-		cp -r ${ROOTFS}/usr/share/loadable_modules ${MEDIA_BOOT}
+		test -d ${ROOTFS} || mkdir ${ROOTFS}
+		mount -t auto ${BLOCK_DEV_ROOT} ${ROOTFS} || FIXUP_ROOTFS=false
 	fi
 
-	cd ${ROOTFS}
-	${ROOTFS_FIXUP_COMMANDS}
-	cd ..
+	if ${FIXUP_ROOTFS}
+	then
+		if [ -f dropbear_rsa_host_key ]
+		then
+			install -d ${ROOTFS}/etc/dropbear
+			install -m 600 dropbear_rsa_host_key ${ROOTFS}/etc/dropbear/dropbear_rsa_host_key
+		fi
+	fi
 fi
 
 if $DO_UNMOUNT
