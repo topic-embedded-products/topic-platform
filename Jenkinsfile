@@ -6,7 +6,7 @@ pipeline {
     agent {
         node {
             label 'openembedded'
-            customWorkspace 'topic-platform-langdale-2023-1'
+            customWorkspace 'topic-platform-langdale-2023-2'
         }
     }
 
