@@ -6,7 +6,7 @@ pipeline {
     agent {
         node {
             label 'openembedded'
-            customWorkspace 'topic-platform-langdale-2023-2'
+            customWorkspace 'topic-platform-mickledore'
         }
     }
 
@@ -21,7 +21,7 @@ pipeline {
             when {
                 anyOf {
                     branch 'master';
-                    branch 'langdale';
+                    branch 'mickledore';
                 }
             }
             steps {
