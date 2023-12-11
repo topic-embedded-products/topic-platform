@@ -6,7 +6,7 @@ pipeline {
     agent {
         node {
             label 'openembedded'
-            customWorkspace 'topic-platform-mickledore'
+            customWorkspace 'topic-platform-nanbield'
         }
     }
 

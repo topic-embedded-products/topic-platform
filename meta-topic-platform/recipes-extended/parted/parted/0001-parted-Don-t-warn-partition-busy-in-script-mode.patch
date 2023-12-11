@@ -15,6 +15,7 @@ Fixes the following issues:
  - lpbug #1270203
 
 Signed-off-by: Sunil Mohan Adapa <address@hidden>
+Upstream-Status: Submitted
 ---
  parted/parted.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
