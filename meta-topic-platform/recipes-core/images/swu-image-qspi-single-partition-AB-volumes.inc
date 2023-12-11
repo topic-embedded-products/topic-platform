@@ -7,7 +7,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/files/qspi-single-partition-AB-volumes:"
 do_swuimage[depends] = "${IMAGENAME}:do_image_complete"
 
 # Only one @@...@@ per line gets replaced, so combine them here
-ROOTFSNAME = "${IMAGENAME}-${MACHINE}.ubifs"
+ROOTFSNAME = "${IMAGENAME}-${MACHINE}${IMAGE_NAME_SUFFIX}.ubifs"
 
 # images and files that will be included in the .swu image
 SWUPDATE_IMAGES = "${ROOTFSNAME}"

@@ -27,5 +27,13 @@ then
 	HOST="${MACHINE}.local:8080"
 fi
 nice bitbake ${IMAGE}-swu-${DEVICE}
-echo "Sending ${IMAGE}-swu-${DEVICE}-${MACHINE}.swu to ${HOST}"
-curl -F "file=@tmp-glibc/deploy/images/${MACHINE}/${IMAGE}-swu-${DEVICE}-${MACHINE}.swu" "http://${HOST}/upload"
+# Support having ".rootfs" in the filename
+for IMAGE_NAME_SUFFIX in '.rootfs' ''
+do
+	if [ -e "tmp-glibc/deploy/images/${MACHINE}/${IMAGE}-swu-${DEVICE}-${MACHINE}${IMAGE_NAME_SUFFIX}.swu" ]
+	then
+		break
+	fi
+done
+echo "Sending ${IMAGE}-swu-${DEVICE}-${MACHINE}${IMAGE_NAME_SUFFIX}.swu to ${HOST}"
+curl -F "file=@tmp-glibc/deploy/images/${MACHINE}/${IMAGE}-swu-${DEVICE}-${MACHINE}${IMAGE_NAME_SUFFIX}.swu" "http://${HOST}/upload"

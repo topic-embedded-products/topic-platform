@@ -10,7 +10,7 @@ BLOCKDEV = "${@'${PN}'.split('-')[-1]}"
 do_swuimage[depends] = "${IMAGENAME}:do_image_complete"
 
 # Only one @@...@@ per line gets replaced, so combine them here
-ROOTFSNAME = "${IMAGENAME}-${MACHINE}.ext4.gz"
+ROOTFSNAME = "${IMAGENAME}-${MACHINE}${IMAGE_NAME_SUFFIX}.ext4.gz"
 ROOTFSATTRS = 'type = "raw"; compressed = "zlib";'
 
 # images and files that will be included in the .swu image
