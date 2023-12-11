@@ -37,11 +37,6 @@ then
 	IMAGE_ROOT=tmp-glibc/deploy/images/${MACHINE}
 fi
 
-if [ -z "${ROOTFSTYPE}" ]
-then
-	ROOTFSTYPE=tar.gz
-fi
-
 # Ubuntu <14 uses /media for mounts, Ubuntu 14 uses /media/$USER
 if [ -z "${SUDO_USER}" ]
 then
@@ -106,7 +101,31 @@ then
 		exit 1
 	fi
 
-	if [ ! -f ${IMAGE_ROOT}/${IMAGE}-${MACHINE}.${ROOTFSTYPE} ]
+	# Can either set ROOTFSTYPE or ROOTFSTYPES
+	if [ -n "${ROOTFSTYPE}" ]
+	then
+		ROOTFSTYPES="${ROOTFSTYPE}"
+	fi
+	if [ -z "${ROOTFSTYPES}" ]
+	then
+		ROOTFSTYPES="ext4.gz tar.gz"
+	fi
+
+	for rfstype in ${ROOTFSTYPES}
+	do
+		# Support having ".rootfs" in the filename
+		for IMAGE_NAME_SUFFIX in '.rootfs' ''
+		do
+			if [ -f ${IMAGE_ROOT}/${IMAGE}-${MACHINE}${IMAGE_NAME_SUFFIX}.${rfstype} ]
+			then
+				ROOTFSTYPE=${rfstype}
+				break 2
+			fi
+		done
+	done
+
+	echo "root: ${IMAGE_ROOT}/${IMAGE}-${MACHINE}${IMAGE_NAME_SUFFIX}.${ROOTFSTYPE}"
+	if [ ! -f ${IMAGE_ROOT}/${IMAGE}-${MACHINE}${IMAGE_NAME_SUFFIX}.${ROOTFSTYPE} ]
 	then
 		echo "Image '${IMAGE}' does not exist, cannot flash it."
 		echo ${IMAGE_ROOT}/${IMAGE}-${MACHINE}.${ROOTFSTYPE}
@@ -165,18 +184,6 @@ fi
 
 if $DO_ROOTFS
 then
-	if [ -d ${MEDIA}/data ]
-	then
-		echo "Writing data..."
-		for FS in ubi ubifs squashfs-lzo squashfs-xz cpio.gz wic.gz
-		do
-			if [ -f ${IMAGE_ROOT}/${IMAGE}*-${MACHINE}.${FS} ]
-			then
-				cp ${IMAGE_ROOT}/${IMAGE}*-${MACHINE}.${FS} ${MEDIA_DATA}
-			fi
-		done
-	fi
-
 	RESIZE_ROOTFS=true
 	REMOUNT=true
 	FIXUP_ROOTFS=false
@@ -195,35 +202,46 @@ then
 	case ${ROOTFSTYPE} in
 		tar*)
 			rm -rf ${ROOTFS}/*
-			tar xaf ${IMAGE_ROOT}/${IMAGE}-${MACHINE}.${ROOTFSTYPE} -C ${ROOTFS}
+			tar xaf ${IMAGE_ROOT}/${IMAGE}-${MACHINE}${IMAGE_NAME_SUFFIX}.${ROOTFSTYPE} -C ${ROOTFS}
 			REMOUNT=false
 			RESIZE_ROOTFS=false
 			;;
 		*.gz)
 			umount ${ROOTFS} 2> /dev/null || umount ${BLOCK_DEV_ROOT}
-			zcat ${IMAGE_ROOT}/${IMAGE}-${MACHINE}.${ROOTFSTYPE} | dd of=${BLOCK_DEV_ROOT} bs=1M
+			zcat ${IMAGE_ROOT}/${IMAGE}-${MACHINE}${IMAGE_NAME_SUFFIX}.${ROOTFSTYPE} | dd of=${BLOCK_DEV_ROOT} bs=1M
 			;;
 		*.xz)
 			umount ${ROOTFS} 2> /dev/null || umount ${BLOCK_DEV_ROOT}
-			xzcat ${IMAGE_ROOT}/${IMAGE}-${MACHINE}.${ROOTFSTYPE} | dd of=${BLOCK_DEV_ROOT} bs=1M
+			xzcat ${IMAGE_ROOT}/${IMAGE}-${MACHINE}${IMAGE_NAME_SUFFIX}.${ROOTFSTYPE} | dd of=${BLOCK_DEV_ROOT} bs=1M
 			;;
 		squashfs*)
 			umount ${ROOTFS} 2> /dev/null || umount ${BLOCK_DEV_ROOT}
-			dd if=${IMAGE_ROOT}/${IMAGE}-${MACHINE}.${ROOTFSTYPE} of=${BLOCK_DEV_ROOT} bs=1M
+			dd if=${IMAGE_ROOT}/${IMAGE}-${MACHINE}${IMAGE_NAME_SUFFIX}.${ROOTFSTYPE} of=${BLOCK_DEV_ROOT} bs=1M
 			REMOUNT=false
 			FIXUP_ROOTFS=false
 			RESIZE_ROOTFS=false
 			;;
 		*)
 			umount ${ROOTFS} 2> /dev/null || umount ${BLOCK_DEV_ROOT}
-			dd if=${IMAGE_ROOT}/${IMAGE}-${MACHINE}.${ROOTFSTYPE} of=${BLOCK_DEV_ROOT} bs=1M
+			dd if=${IMAGE_ROOT}/${IMAGE}-${MACHINE}${IMAGE_NAME_SUFFIX}.${ROOTFSTYPE} of=${BLOCK_DEV_ROOT} bs=1M
 			;;
 	esac
 
 	if ${RESIZE_ROOTFS}
 	then
-		tune2fs -L ${ROOTLABEL} ${BLOCK_DEV_ROOT} || echo "Could not set label"
-		resize2fs ${BLOCK_DEV_ROOT} || echo "could not resize filesystem"
+		# Attempt to use e2fsprogs from Yocto/OE as the build host may have old versions...
+		RESIZE2FS=resize2fs
+		if [ -x tmp-glibc/sysroots-components/x86_64/e2fsprogs-native/sbin/resize2fs ]
+		then
+			RESIZE2FS=tmp-glibc/sysroots-components/x86_64/e2fsprogs-native/sbin/resize2fs
+		fi
+		TUNE2FS=tune2fs
+		if [ -x tmp-glibc/sysroots-components/x86_64/e2fsprogs-native/sbin/tune2fs ]
+		then
+			TUNE2FS=tmp-glibc/sysroots-components/x86_64/e2fsprogs-native/sbin/tune2fs
+		fi
+		${TUNE2FS} -L ${ROOTLABEL} ${BLOCK_DEV_ROOT} || echo "Could not set label"
+		${RESIZE2FS} ${BLOCK_DEV_ROOT} || echo "could not resize filesystem"
 	fi
 
 	if ${REMOUNT} && ${FIXUP_ROOTFS}
