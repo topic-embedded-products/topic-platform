@@ -3,7 +3,6 @@ software =
 	version = "@@IMAGEVERSION@@";
 	description = "QSPI Bootloader & partition init package for SWUpdate";
 
-	@@SWU_BOARD@@ = {
 		hardware-compatibility: [ "@@SWU_HWREVISION@@" ];
 
 		scripts: (
@@ -21,5 +20,4 @@ software =
 				type = "flash";
 			},
 		);
-	}
 }

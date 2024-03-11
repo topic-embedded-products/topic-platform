@@ -3,7 +3,6 @@ software =
 	version = "@@IMAGEVERSION@@";
 	description = "eMMC Bootloader & partition init package for SWUpdate";
 
-	@@SWU_BOARD@@ = {
 		hardware-compatibility: [ "@@SWU_HWREVISION@@" ];
 
 		scripts: (
@@ -23,5 +22,4 @@ software =
 			path = "boot.bin";
 		}
 		);
-	}
 }
