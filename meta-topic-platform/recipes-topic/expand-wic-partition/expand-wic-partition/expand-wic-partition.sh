@@ -11,10 +11,19 @@ then
 	DEV_BASE=`basename ${BLOCK_DEV}`
 	touch /dev/nomount.${DEV_BASE}
 
-	parted --align optimal --script ${BLOCK_DEV} -- \
-		resizepart 2 40% \
-		mkpart primary ext4 40% 80% \
-		mkpart primary ext4 80% -1s
+	SIZE=`cat /sys/block/${DEV_BASE}/size`
+	if [ "${SIZE}" -lt 10000000 ]
+	then
+		# Smaller than 5GB, use percentages
+		SIZEA='40%'
+		SIZEB='80%'
+	else
+		# Larger, use 2GB for rootfs partitions
+		SIZEA='2056MiB'
+		SIZEB='4GiB'
+	fi
+	parted --align optimal --script ${BLOCK_DEV} -- resizepart 2 "${SIZEA}"
+	parted --align optimal --script ${BLOCK_DEV} -- mkpart primary ext4 "${SIZEA}" "${SIZEB}" mkpart primary ext4 "${SIZEB}" '-1s'
 
 	# Wait until kernel reloaded partition table
 	# The system is removing & adding the devices several times, therefore sleep for 2 seconds

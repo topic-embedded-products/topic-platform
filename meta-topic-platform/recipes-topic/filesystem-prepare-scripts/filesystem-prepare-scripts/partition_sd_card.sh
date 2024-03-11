@@ -48,13 +48,25 @@ do
 done
 echo ""
 
+SIZE=`cat /sys/block/${DEVB}/size`
+if [ "${SIZE}" -lt 10000000 ]
+then
+	# Smaller than 5GB, use percentages
+	SIZEA='40%'
+	SIZEB='80%'
+else
+	# Larger, use 2GB for rootfs partitions
+	SIZEA='2080MiB'
+	SIZEB='4GiB'
+fi
+
 # Partition the disk, as 64M FAT16, 2xroot and the rest data
 parted --align optimal --script ${DEV} -- \
 	mklabel msdos \
 	mkpart primary fat16 1MiB 64MiB \
-	mkpart primary ext4 64MiB 40% \
-	mkpart primary ext4 40% 80% \
-	mkpart primary ext4 80% -1s \
+	mkpart primary ext4 64MiB "${SIZEA}" \
+	mkpart primary ext4 "${SIZEA}" "${SIZEB}" \
+	mkpart primary ext4 "${SIZEB}" -1s \
 	set ${BOOTABLE_PARTITION_NUMBER:-2} boot on
 
 # Wait until kernel reloaded partition table
