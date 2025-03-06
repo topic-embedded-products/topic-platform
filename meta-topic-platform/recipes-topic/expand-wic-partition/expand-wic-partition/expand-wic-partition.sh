@@ -37,11 +37,11 @@ then
 	echo ""
 
 	dd if=/dev/zero of=${BLOCK_DEV}p3 bs=8k count=1
-	mkfs.ext4 -m 0 -L "sd-rootfs-b" -O sparse_super,dir_index ${BLOCK_DEV}p3
+	mkfs.ext4 -m 0 -L "sd-rootfs-b" -O sparse_super,dir_index -E nodiscard ${BLOCK_DEV}p3
 
 	# Format the Linux data part, optimize for large files
 	dd if=/dev/zero of=${BLOCK_DEV}p4 bs=8k count=1
-	mkfs.ext4 -m 0 -L "data" -O large_file,sparse_super,dir_index ${BLOCK_DEV}p4
+	mkfs.ext4 -m 0 -L "data" -O large_file,sparse_super,dir_index -E nodiscard ${BLOCK_DEV}p4
 
 	rm /dev/nomount.${DEV_BASE}
 

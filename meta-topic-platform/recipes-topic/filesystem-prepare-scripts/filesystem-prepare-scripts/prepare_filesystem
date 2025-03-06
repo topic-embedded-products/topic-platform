@@ -63,7 +63,7 @@ else
 		exit 1
 	fi
 
-	mkfs.ext4 -F -m 0 -L $NAME -O sparse_super,dir_index $1
+	mkfs.ext4 -F -m 0 -L $NAME -O sparse_super,dir_index -E nodiscard $1
 	mount $1 $UPDATE_MOUNT
 fi
 echo "Succeeded providing ${UPDATE_MOUNT}"

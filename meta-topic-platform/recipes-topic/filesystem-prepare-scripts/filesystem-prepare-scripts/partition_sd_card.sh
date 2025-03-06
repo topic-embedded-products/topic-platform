@@ -85,9 +85,9 @@ umount ${DEVP}[0-9] 2> /dev/null || true
 mkfs.vfat -n "boot" ${DEVP}1
 
 # Format the Linux rootfs part
-mkfs.ext4 -F -m 0 -L "${PARTPREFIX}-rootfs-a" -O sparse_super,dir_index ${DEVP}2
-mkfs.ext4 -F -m 0 -L "${PARTPREFIX}-rootfs-b" -O sparse_super,dir_index ${DEVP}3
+mkfs.ext4 -F -m 0 -L "${PARTPREFIX}-rootfs-a" -O sparse_super,dir_index -E nodiscard ${DEVP}2
+mkfs.ext4 -F -m 0 -L "${PARTPREFIX}-rootfs-b" -O sparse_super,dir_index -E nodiscard ${DEVP}3
 
 # Format the Linux data part, optimize for large files
-mkfs.ext4 -F -m 0 -L "data" -O large_file,sparse_super,dir_index ${DEVP}4
+mkfs.ext4 -F -m 0 -L "data" -O large_file,sparse_super,dir_index -E nodiscard ${DEVP}4
 
