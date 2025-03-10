@@ -16,7 +16,7 @@ IMAGE_DEPENDS += "update-initramfs-image virtual/kernel"
 
 # Only one @@...@@ per line gets replaced, so combine them here
 ROOTFSNAME = "${IMAGENAME}-${MACHINE}${IMAGE_NAME_SUFFIX}.ubifs"
+UPDATEIMAGE = "update-initramfs-image-${MACHINE}${IMAGE_NAME_SUFFIX}.cpio"
 
 # images and files that will be included in the .swu image
-SWUPDATE_IMAGES = "${ROOTFSNAME} update-initramfs-image-${MACHINE}.cpio"
-
+SWUPDATE_IMAGES = "${ROOTFSNAME} ${UPDATEIMAGE}"

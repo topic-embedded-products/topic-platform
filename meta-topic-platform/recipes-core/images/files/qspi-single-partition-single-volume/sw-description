@@ -24,7 +24,7 @@ software =
 				create-destination = "true";
 			},
 			{
-				filename = "update-initramfs-image-@@MACHINE@@.cpio";
+				filename = "@@UPDATEIMAGE@@";
 				path = "/tmp/update-initramfs-image.cpio";
 				create-destination = "true";
 			},
