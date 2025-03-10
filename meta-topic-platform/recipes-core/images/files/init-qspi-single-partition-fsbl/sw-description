@@ -2,6 +2,7 @@ software =
 {
 	version = "@@IMAGEVERSION@@";
 	description = "QSPI Bootloader & partition init package for SWUpdate";
+	reboot = false;
 
 		hardware-compatibility: [ "@@SWU_HWREVISION@@" ];
 
