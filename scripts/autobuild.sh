@@ -11,7 +11,7 @@ source ./profile
 rm -rf artefacts artefacts-nv
 mkdir artefacts
 mkdir artefacts-nv
-for machine in tdkz15 tdkz30 tepzu9 tdpzu9 tdkzu6 tdkzu9 tdkzu15
+for machine in tdkz15 tdkz30 tepzu9 tdpzu9 ttpzu9 tdkzu6 tdkzu9 tdkzu15
 do
   export MACHINE=$machine
   nice bitbake -k my-image-feed
