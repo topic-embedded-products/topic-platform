@@ -1,0 +1,1 @@
+my-image-swu-mmcblk0.bb
