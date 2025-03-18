@@ -26,6 +26,9 @@ DHCPSERVERCONFIG = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'udhc
 # The poweroff-key is not needed when running systemd
 POWERKEY_PROGRAM = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'poweroff-key', d)}"
 
+# Be able to find the machine on the network
+MDNS_PROVIDER ?= "avahi-daemon"
+
 MY_THINGS = "\
 	kernel-image \
 	${@bb.utils.contains('VIRTUAL-RUNTIME_dev_manager', 'busybox-mdev', 'modutils-loadscript', '', d)} \
@@ -33,9 +36,10 @@ MY_THINGS = "\
 	${@ 'expand-wic-partition' if d.getVar('WIC_SUPPORT') == 'true' else ''} \
 	${@bb.utils.contains("IMAGE_FEATURES", "swupdate", d.getVar('SWUPDATE_THINGS'), "", d)} \
 	${@bb.utils.contains('MACHINE_FEATURES', 'usbgadget', d.getVar('DHCPSERVERCONFIG'), '', d)} \
-	${@bb.utils.contains("IMAGE_FEATURES", "package-management", "distro-feed-configs avahi-daemon", "", d)} \
+	${@bb.utils.contains("IMAGE_FEATURES", "package-management", "distro-feed-configs", "", d)} \
 	${@bb.utils.contains('MACHINE_FEATURES', 'wifi', 'packagegroup-base-wifi', '', d)} \
 	${@bb.utils.contains('MACHINE_FEATURES', 'powerkey', d.getVar('POWERKEY_PROGRAM'), '', d)} \
+	${MDNS_PROVIDER} \
 	"
 
 # Skip packagegroup-base to reduce the number of packages built. Thus, we need
