@@ -1,0 +1,12 @@
+[Unit]
+Description=Load USB gadget scheme
+Requires=sys-kernel-config.mount
+After=sys-kernel-config.mount
+
+[Service]
+ExecStart=/usr/sbin/gadget_config.sh
+RemainAfterExit=yes
+Type=oneshot
+
+[Install]
+WantedBy=usb-gadget.target

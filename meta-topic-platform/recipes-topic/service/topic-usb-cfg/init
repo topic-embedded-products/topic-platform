@@ -1,0 +1,6 @@
+#!/bin/sh
+case "$1" in
+  start)
+    /usr/sbin/gadget_config.sh
+    ;;
+esac

@@ -20,8 +20,8 @@ WIC_SUPPORT = "${@ 'true' if bb.utils.contains("IMAGE_FSTYPES", "wic", True, Fal
 
 require ${@bb.utils.contains("IMAGE_FEATURES", "swupdate", "swu.inc", "", d)}
 
-# USB gadget ethernet works best when you have a DHCP server. Not suited for systemd though.
-DHCPSERVERCONFIG = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'udhcpd-iface-config', d)}"
+# USB gadget ethernet works best when you have a DHCP server.
+DHCPSERVERCONFIG = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'topic-usb-cfg', 'topic-usb-cfg udhcpd-iface-config', d)}"
 
 # The poweroff-key is not needed when running systemd
 POWERKEY_PROGRAM = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'poweroff-key', d)}"
@@ -39,6 +39,7 @@ MY_THINGS = "\
 	${@bb.utils.contains("IMAGE_FEATURES", "package-management", "distro-feed-configs", "", d)} \
 	${@bb.utils.contains('MACHINE_FEATURES', 'wifi', 'packagegroup-base-wifi', '', d)} \
 	${@bb.utils.contains('MACHINE_FEATURES', 'powerkey', d.getVar('POWERKEY_PROGRAM'), '', d)} \
+	${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd-net-config', '', d)} \
 	${MDNS_PROVIDER} \
 	"
 
