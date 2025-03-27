@@ -1,9 +1,6 @@
 [Match]
 Name=usb1
 
-[Link]
-MTUBytes=15000
-
 [Network]
 DHCPServer=yes
 Address=192.168.222.129/28
@@ -17,4 +14,3 @@ EmitRouter=no
 EmitNTP=no
 EmitTimezone=no
 UplinkInterface=:none
-SendOption=26:uint16:15000
