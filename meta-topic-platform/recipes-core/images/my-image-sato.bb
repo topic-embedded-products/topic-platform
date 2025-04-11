@@ -1,0 +1,9 @@
+DESCRIPTION = "x11 graphical desktop image"
+
+require my-image.bb
+
+IMAGE_FEATURES += "splash x11-base x11-sato hwcodecs"
+
+# Image will be too large for QSPI, so no ubifs
+IMAGE_FSTYPES = "ext4.gz wic wic.bmap"
+
