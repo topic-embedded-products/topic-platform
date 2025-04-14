@@ -30,3 +30,31 @@ do
     ln "${a}" "artefacts/${b}+${VERSION}.${ext}"
   done
 done
+cd ..
+
+if [ ! -d build-x11 ]
+then
+  echo "First time build - creating folders"
+  scripts/init-oe.sh build-x11
+fi
+cd build-x11
+# Configure for X11
+echo 'DISTRO = "topic-x11"' > conf/site.conf
+rm -rf artefacts artefacts-nv
+ln -s ../build/artefacts artefacts
+mkdir artefacts-nv
+for machine in tdkz15 tdkz30 tepzu9 tdkzu6 tdkzu9 tdkzu15
+do
+  export MACHINE=$machine
+  nice bitbake -k my-image-sato-ro-swu-mmcblk0
+  cp -l tmp-glibc/deploy/images/$MACHINE/*-$MACHINE.rootfs.swu artefacts-nv/
+done
+
+for ext in swu
+do
+  for a in artefacts-nv/*.${ext}
+  do
+    b=`basename "${a}" .${ext}`
+    ln "${a}" "artefacts/${b}+${VERSION}.${ext}"
+  done
+done
