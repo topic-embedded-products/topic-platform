@@ -11,3 +11,5 @@ MY_THINGS += "${@bb.utils.contains('MACHINE_FEATURES', 'mali400', 'mesa-demos xs
 MY_THINGS += "libdrm-tests"
 
 IMAGE_OVERHEAD_FACTOR="1.2"
+
+MY_THINGS += "alsa-utils chocolatedoom crispydoom"
