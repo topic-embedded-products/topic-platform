@@ -10,3 +10,5 @@ IMAGE_FSTYPES = "ext4.gz wic wic.bmap"
 MY_THINGS += "${@bb.utils.contains('MACHINE_FEATURES', 'mali400', 'mesa-demos', '', d)}"
 
 IMAGE_OVERHEAD_FACTOR="1.2"
+
+MY_THINGS += "crispydoom"
