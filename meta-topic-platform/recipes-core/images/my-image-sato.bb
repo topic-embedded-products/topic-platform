@@ -8,3 +8,5 @@ IMAGE_FEATURES += "splash x11-base x11-sato hwcodecs"
 IMAGE_FSTYPES = "ext4.gz wic wic.bmap"
 
 MY_THINGS += "${@bb.utils.contains('MACHINE_FEATURES', 'mali400', 'mesa-demos', '', d)}"
+
+IMAGE_OVERHEAD_FACTOR="1.2"
