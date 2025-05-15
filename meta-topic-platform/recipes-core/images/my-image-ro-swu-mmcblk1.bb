@@ -1,1 +1,1 @@
-my-image-swu-mmcblk0.bb
+my-image-ro-swu-mmcblk0.bb
