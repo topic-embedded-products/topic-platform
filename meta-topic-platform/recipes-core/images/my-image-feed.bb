@@ -5,21 +5,21 @@ SUMMARY = "Recipe to create a feed in addition to the images"
 require recipes-core/meta/package-index.bb
 
 # The images to build
-DEPENDS = "my-image"
+DEPENDS = "my-image my-image-ro"
 
 IMAGES_QSPI = "init-qspi-swu my-image-swu-qspi"
-IMAGES_EMMC = "init-emmc-swu my-image-swu-emmc"
-IMAGES_SD = "my-image-swu-sd"
+IMAGES_EMMC = "init-emmc-swu"
+IMAGES_MMC0 = "my-image-swu-mmcblk0 my-image-ro-swu-mmcblk0"
+IMAGES_MMC1 = "my-image-swu-mmcblk1 my-image-ro-swu-mmcblk1"
 
 EXTRA_IMAGES ?= ""
-EXTRA_IMAGES:topic-miami = "${IMAGES_QSPI} ${IMAGES_SD}"
-EXTRA_IMAGES:topic-miamimp = "${IMAGES_QSPI} ${IMAGES_SD} ${IMAGES_EMMC}"
-EXTRA_IMAGES:xdpzu7 = "${IMAGES_QSPI} ${IMAGES_EMMC}"
+EXTRA_IMAGES:topic-miami = "${IMAGES_QSPI} ${IMAGES_MMC0}"
+EXTRA_IMAGES:topic-miamimp = "${IMAGES_QSPI} ${IMAGES_MMC0} ${IMAGES_MMC1} ${IMAGES_EMMC}"
 
 DEPENDS += "${EXTRA_IMAGES}"
 
 # List of packages that we want to build but not deploy on target. In alphabetical
 # order for easy maintenance...
-OPTIONAL_PACKAGES = "strace v4l-utils"
+OPTIONAL_PACKAGES = "iperf3 strace"
 
 DEPENDS += "${OPTIONAL_PACKAGES}"

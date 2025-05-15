@@ -7,7 +7,7 @@ DEPENDS += "${DISTRO_EXTRA_DEPENDS} ${MACHINE_EXTRA_DEPENDS}"
 IMAGE_FEATURES[validitems] += "swupdate"
 IMAGE_FEATURES += "package-management ssh-server-dropbear swupdate"
 
-IMAGE_FSTYPES = "ext4.gz tar.gz wic ubifs"
+IMAGE_FSTYPES = "ext4.gz wic ubifs"
 
 inherit core-image
 
