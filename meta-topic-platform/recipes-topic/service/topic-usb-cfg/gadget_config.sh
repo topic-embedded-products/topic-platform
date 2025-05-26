@@ -19,7 +19,7 @@ fi
 mkdir $g1
 mkdir $g1/strings/0x409 # US English, others rarely seen
 echo "TOPIC" > $g1/strings/0x409/manufacturer
-echo "Network+Serial gadget" > $g1/strings/0x409/product
+echo "Network+UAS gadget" > $g1/strings/0x409/product
 if [ -e /etc/swrevision ]
 then
 	cat /etc/swrevision > $g1/strings/0x409/serialnumber
@@ -33,13 +33,22 @@ echo "0x1d6b" > $g1/idVendor
 echo "0x0104" > $g1/idProduct
 # Ethernet
 mkdir $g1/functions/${ethmode}.usb0
-# Serial
-mkdir $g1/functions/acm.0
+# UAS
+mkdir $g1/functions/tcm.usb0
+dd if=/dev/zero of=/tmp/file.$f bs=1M count=128
+mkdir -p /sys/kernel/config/target/core/fileio_0/fileio
+echo "fd_dev_name=/tmp/file.$f,fd_dev_size=134217728" > /sys/kernel/config/target/core/fileio_0/fileio/control
+echo 1 > /sys/kernel/config/target/core/fileio_0/fileio/enable
+mkdir -p /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1
+mkdir /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/lun/lun_0
+echo naa.$f > /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/nexus
+ln -s /sys/kernel/config/target/core/fileio_0/fileio /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/lun/lun_0/virtual_scsi_port
+echo 1 > /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/enable
 
 # Configuration
 mkdir $g1/configs/c1.1
 ln -s $g1/functions/${ethmode}.usb0 $g1/configs/c1.1/${ethmode}.usb0
-ln -s $g1/functions/acm.0 $g1/configs/c1.1/acm.0
+ln -s $g1/functions/tcm.usb0 $g1/configs/c1.1/tcm.usb0
 
 # Attach to UDC
 echo $f > $g1/UDC
