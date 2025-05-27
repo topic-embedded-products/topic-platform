@@ -2,6 +2,13 @@
 cfgdir="/sys/kernel/config/usb_gadget"
 # One of: ncm ecm eem rndis
 ethmode=rndis
+
+instance=0
+
+dd if=/dev/zero of=/tmp/zeroes bs=1M count=256
+MSDEV=/tmp/zeroes
+FIOCONTROL="fd_dev_name=${MSDEV},fd_buffered_io=1,fd_dev_size=268435456"
+
 # Loop through the USB udc candidates and create gadgets for all of them
 for f in `ls /sys/class/udc`
 do
@@ -10,7 +17,7 @@ g1="$cfgdir/$f"
 if [ -d "$g1" ]
 then
 	echo "Removing existing $g1"
-	rm -f $g1/configs/c1.1/*0 || true
+	rm -f $g1/configs/c1.1/*.${f} || true
 	rmdir $g1/configs/c1.1 || true
 	rmdir $g1/functions/* || true
 	rmdir $g1/strings/* || true
@@ -37,26 +44,43 @@ echo "0x100" > $g1/bcdDevice
 echo "0x1d6b" > $g1/idVendor
 # Multifunction Composite Gadget
 echo "0x0104" > $g1/idProduct
-# Ethernet
-mkdir $g1/functions/${ethmode}.usb0
-# UAS
-mkdir $g1/functions/tcm.usb0
-dd if=/dev/zero of=/tmp/file.$f bs=1M count=128
-mkdir -p /sys/kernel/config/target/core/fileio_0/fileio
-echo "fd_dev_name=/tmp/file.$f,fd_dev_size=134217728" > /sys/kernel/config/target/core/fileio_0/fileio/control
-echo 1 > /sys/kernel/config/target/core/fileio_0/fileio/enable
-mkdir -p /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1
-mkdir /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/lun/lun_0
-echo naa.$f > /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/nexus
-ln -s /sys/kernel/config/target/core/fileio_0/fileio /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/lun/lun_0/virtual_scsi_port
-echo 1 > /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/enable
-
 # Configuration
 mkdir $g1/configs/c1.1
-ln -s $g1/functions/${ethmode}.usb0 $g1/configs/c1.1/${ethmode}.usb0
-ln -s $g1/functions/tcm.usb0 $g1/configs/c1.1/tcm.usb0
+# Ethernet
+mkdir $g1/functions/${ethmode}.${f}
+ln -s $g1/functions/${ethmode}.${f} $g1/configs/c1.1/${ethmode}.${f}
+# Mass storage
+mkdir $g1/functions/mass_storage.${f}
+lun=0
+mkdir $g1/functions/mass_storage.${f}/lun.${lun} || true
+if [ -d $g1/functions/mass_storage.${f}/lun.${lun} ]
+then
+	echo "1" > $g1/functions/mass_storage.${f}/lun.${lun}/removable
+	echo "1" > $g1/functions/mass_storage.${f}/lun.${lun}/ro
+	echo "MS${instance}${lun}" > $g1/functions/mass_storage.${f}/lun.${lun}/inquiry_string
+	echo "${MSDEV}" > $g1/functions/mass_storage.${f}/lun.${lun}/file
+	ln -s $g1/functions/mass_storage.${f} $g1/configs/c1.1/mass_storage.${f}
+fi
 
+# UAS
+if mkdir $g1/functions/tcm.${f}
+then
+	mkdir -p /sys/kernel/config/target/core/fileio_${instance}/fileio
+	echo "${FIOCONTROL}" > /sys/kernel/config/target/core/fileio_${instance}/fileio/control
+	echo 1 > /sys/kernel/config/target/core/fileio_${instance}/fileio/enable
+	mkdir -p /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1
+	mkdir /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/lun/lun_0
+	echo 15 > /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/maxburst
+	echo naa.$f > /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/nexus
+	ln -s /sys/kernel/config/target/core/fileio_${instance}/fileio /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/lun/lun_0/virtual_scsi_port
+	echo 1 > /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/enable
+
+	ln -s $g1/functions/tcm.${f} $g1/configs/c1.1/tcm.${f}
+else
+	echo "Failed to enable TCM mode for $f"
+fi
 # Attach to UDC
 echo $f > $g1/UDC
 
+instance=$((instance + 1))
 done
