@@ -10,12 +10,18 @@ g1="$cfgdir/$f"
 if [ -d "$g1" ]
 then
 	echo "Removing existing $g1"
-	rm -f $g1/configs/c1.1/${ethmode}.usb0
+	rm -f $g1/configs/c1.1/*0 || true
 	rmdir $g1/configs/c1.1 || true
 	rmdir $g1/functions/* || true
 	rmdir $g1/strings/* || true
 	rmdir $g1 || exit 1
 fi
+
+if [ "$1" = "stop" ]
+then
+	continue
+fi
+
 mkdir $g1
 mkdir $g1/strings/0x409 # US English, others rarely seen
 echo "TOPIC" > $g1/strings/0x409/manufacturer
