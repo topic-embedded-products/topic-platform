@@ -2,13 +2,11 @@
 cfgdir="/sys/kernel/config/usb_gadget"
 # One of: ncm ecm eem rndis
 ethmode=rndis
+# mass storage
+MSDEV=/dev/nvme0n1
+FIOCONTROL="fd_dev_name=${MSDEV},fd_buffered_io=1"
 
 instance=0
-
-dd if=/dev/zero of=/tmp/zeroes bs=1M count=256
-MSDEV=/tmp/zeroes
-FIOCONTROL="fd_dev_name=${MSDEV},fd_buffered_io=1,fd_dev_size=268435456"
-
 # Loop through the USB udc candidates and create gadgets for all of them
 for f in `ls /sys/class/udc`
 do
@@ -55,8 +53,10 @@ lun=0
 mkdir $g1/functions/mass_storage.${f}/lun.${lun} || true
 if [ -d $g1/functions/mass_storage.${f}/lun.${lun} ]
 then
+	echo "16" >  $g1/functions/mass_storage.${f}/num_buffers ||| true
 	echo "1" > $g1/functions/mass_storage.${f}/lun.${lun}/removable
 	echo "1" > $g1/functions/mass_storage.${f}/lun.${lun}/ro
+	echo "1" > $g1/functions/mass_storage.${f}/lun.${lun}/nofua
 	echo "MS${instance}${lun}" > $g1/functions/mass_storage.${f}/lun.${lun}/inquiry_string
 	echo "${MSDEV}" > $g1/functions/mass_storage.${f}/lun.${lun}/file
 	ln -s $g1/functions/mass_storage.${f} $g1/configs/c1.1/mass_storage.${f}
