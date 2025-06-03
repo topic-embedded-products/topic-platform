@@ -1,7 +1,7 @@
 #!/bin/sh -e
 cfgdir="/sys/kernel/config/usb_gadget"
 # One of: ncm ecm eem rndis
-ethmode=rndis
+ethmode=ncm
 # mass storage
 MSDEV=/dev/nvme0n1
 FIOCONTROL="fd_dev_name=${MSDEV},fd_buffered_io=1"
@@ -53,31 +53,19 @@ lun=0
 mkdir $g1/functions/mass_storage.${f}/lun.${lun} || true
 if [ -d $g1/functions/mass_storage.${f}/lun.${lun} ]
 then
-	echo "16" >  $g1/functions/mass_storage.${f}/num_buffers ||| true
+	echo "16" >  $g1/functions/mass_storage.${f}/num_buffers || true
 	echo "1" > $g1/functions/mass_storage.${f}/lun.${lun}/removable
 	echo "1" > $g1/functions/mass_storage.${f}/lun.${lun}/ro
-	echo "1" > $g1/functions/mass_storage.${f}/lun.${lun}/nofua
 	echo "MS${instance}${lun}" > $g1/functions/mass_storage.${f}/lun.${lun}/inquiry_string
 	echo "${MSDEV}" > $g1/functions/mass_storage.${f}/lun.${lun}/file
 	ln -s $g1/functions/mass_storage.${f} $g1/configs/c1.1/mass_storage.${f}
 fi
-
-# UAS
-if mkdir $g1/functions/tcm.${f}
+# ACM serial
+if mkdir $g1/functions/acm.${f}
 then
-	mkdir -p /sys/kernel/config/target/core/fileio_${instance}/fileio
-	echo "${FIOCONTROL}" > /sys/kernel/config/target/core/fileio_${instance}/fileio/control
-	echo 1 > /sys/kernel/config/target/core/fileio_${instance}/fileio/enable
-	mkdir -p /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1
-	mkdir /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/lun/lun_0
-	echo 15 > /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/maxburst
-	echo naa.$f > /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/nexus
-	ln -s /sys/kernel/config/target/core/fileio_${instance}/fileio /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/lun/lun_0/virtual_scsi_port
-	echo 1 > /sys/kernel/config/target/usb_gadget/naa.$f/tpgt_1/enable
-
-	ln -s $g1/functions/tcm.${f} $g1/configs/c1.1/tcm.${f}
+	ln -s $g1/functions/acm.${f} $g1/configs/c1.1/acm.${f}
 else
-	echo "Failed to enable TCM mode for $f"
+	echo "Failed to enable ACM mode for $f"
 fi
 # Attach to UDC
 echo $f > $g1/UDC
