@@ -7,8 +7,10 @@ IMAGE_FEATURES += "splash x11-base x11-sato hwcodecs"
 # Image will be too large for QSPI, so no ubifs
 IMAGE_FSTYPES = "ext4.gz wic wic.bmap"
 
-MY_THINGS += "${@bb.utils.contains('MACHINE_FEATURES', 'mali400', 'mesa-demos', '', d)}"
+MY_THINGS += "${@bb.utils.contains('MACHINE_FEATURES', 'mali400', 'mesa-demos xserver-xorg-extension-glx', '', d)}"
 
 IMAGE_OVERHEAD_FACTOR="1.2"
 
-MY_THINGS += "crispydoom"
+MY_DOOM = "${@bb.utils.contains('MACHINE_FEATURES', 'mali400', 'gzdoom', 'crispydoom', d)}"
+
+MY_THINGS += "${MY_DOOM}"
