@@ -15,12 +15,16 @@ SRC_URI = "https://github.com/freedoom/freedoom/releases/download/v${PV}/freedoo
 
 inherit allarch
 
-FILES:${PN} = "${datadir}/games/doom/*"
-FILES:${PN}-doc = "${datadir}/doc/freedoom/*"
+FILES:${PN} = "${datadir}/doc/freedoom/*"
+
+PACKAGES =+ "${PN}1 ${PN}2"
+RDEPENDS:${PN} = "${PN}1 ${PN}2"
+
+FILES:${PN}1 = "${datadir}/games/doom/freedoom1.wad"
+FILES:${PN}2 = "${datadir}/games/doom/freedoom2.wad"
 
 do_install() {
 	install -d ${D}/${datadir}/games/doom
-
 	install -m 0644 ${WORKDIR}/freedoom-${PV}/freedoom1.wad ${D}/${datadir}/games/doom/
 	install -m 0644 ${WORKDIR}/freedoom-${PV}/freedoom2.wad ${D}/${datadir}/games/doom/
 }

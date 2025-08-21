@@ -16,3 +16,45 @@ inherit autotools gettext pkgconfig
 S = "${WORKDIR}/git"
 
 FILES:${PN} += "${datadir}"
+
+PACKAGES =+ "crispy-doom crispy-heretic crispy-hexen crispy-strife crispy-server crispy-common"
+RDEPENDS:${PN} = "crispy-doom crispy-heretic crispy-hexen crispy-strife crispy-server"
+
+FILES:crispy-doom = "\
+	${bindir}/*doom* \
+	${datadir}/applications/*Doom* \
+	${datadir}/doc/crispy-doom \
+	${datadir}/icons/hicolor/*/apps/*doom* \
+	${datadir}/metainfo/*Doom* \
+	"
+RDEPENDS:crispy-doom += "crispy-common"
+
+FILES:crispy-heretic = "\
+	${bindir}/*heretic* \
+	${datadir}/applications/*Heretic* \
+	${datadir}/doc/crispy-heretic \
+	${datadir}/icons/hicolor/*/apps/*heretic* \
+	${datadir}/metainfo/*Heretic* \
+	"
+RDEPENDS:crispy-heretic += "crispy-common"
+
+FILES:crispy-hexen = "\
+	${bindir}/*hexen* \
+	${datadir}/applications/*Hexen* \
+	${datadir}/doc/crispy-hexen \
+	${datadir}/icons/hicolor/*/apps/*hexen* \
+	${datadir}/metainfo/*Hexen* \
+	"
+RDEPENDS:crispy-hexen += "crispy-common"
+
+FILES:crispy-strife = "\
+	${bindir}/*strife* \
+	${datadir}/applications/*Strife* \
+	${datadir}/doc/crispy-strife \
+	${datadir}/icons/hicolor/*/apps/*strife* \
+	${datadir}/metainfo/*Strife* \
+	"
+RDEPENDS:crispy-strife += "crispy-common"
+
+FILES:crispy-server = "${bindir}/crispy-server*"
+FILES:crispy-common = "${datadir}/icons/hicolor/*/apps/*setup*"
