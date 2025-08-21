@@ -58,3 +58,24 @@ do
     ln "${a}" "artefacts/${b}+${VERSION}.${ext}"
   done
 done
+cd ..
+
+# Only build wayland for machines that have a GPU. This is only done to fill
+# the sstate-cache
+if [ ! -d build-wayland ]
+then
+  echo "First time build - creating folders"
+  scripts/init-oe.sh build-wayland
+fi
+cd build-wayland
+# Configure for wayland
+echo 'DISTRO = "topic-wayland"' > conf/site.conf
+rm -rf artefacts artefacts-nv
+ln -s ../build/artefacts artefacts
+mkdir artefacts-nv
+for machine in tepzu9 tdkzu9
+do
+  export MACHINE=$machine
+  nice bitbake -k my-image-sato-ro-swu-mmcblk0 weston wayland
+done
+cd ..

@@ -1,1 +1,3 @@
 /build/
+/build-x11/
+/build-wayland/
