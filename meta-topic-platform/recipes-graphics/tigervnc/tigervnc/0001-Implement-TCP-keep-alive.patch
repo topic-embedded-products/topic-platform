@@ -1,0 +1,102 @@
+From 0e87acff777839ed3c2ebcaf4e67d786c7175879 Mon Sep 17 00:00:00 2001
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Date: Fri, 12 Jan 2024 17:03:33 +0100
+Subject: [PATCH] Implement TCP keep-alive
+
+Activate TCP keep-alive on all client connections, to give up when
+the network isn't functioning for example. This should abort the
+connection in about 2 minutes (60s idle plus 5 missed intervals).
+---
+ common/network/Socket.cxx       |  5 +++++
+ common/network/Socket.h         |  1 +
+ common/network/TcpSocket.cxx    | 18 ++++++++++++++++++
+ common/network/TcpSocket.h      |  1 +
+ common/rfb/VNCSConnectionST.cxx |  3 +++
+ 5 files changed, 28 insertions(+)
+
+diff --git a/common/network/Socket.cxx b/common/network/Socket.cxx
+index 9dd8bfe1..237a8950 100644
+--- a/common/network/Socket.cxx
++++ b/common/network/Socket.cxx
+@@ -90,6 +90,11 @@ Socket::~Socket()
+   delete outstream;
+ }
+ 
++// Default implementation does nothing
++void Socket::setKeepalive(int seconds)
++{
++}
++
+ // if shutdown() is overridden then the override MUST call on to here
+ void Socket::shutdown()
+ {
+diff --git a/common/network/Socket.h b/common/network/Socket.h
+index d38feba4..2efc52be 100644
+--- a/common/network/Socket.h
++++ b/common/network/Socket.h
+@@ -47,6 +47,7 @@ namespace network {
+     bool isShutdown() const;
+ 
+     virtual bool cork(bool enable) = 0;
++    virtual void setKeepalive(int seconds);
+ 
+     // information about the remote end of the socket
+     virtual char* getPeerAddress() = 0; // a string e.g. "192.168.0.1"
+diff --git a/common/network/TcpSocket.cxx b/common/network/TcpSocket.cxx
+index 48e4ebd0..b644b07e 100644
+--- a/common/network/TcpSocket.cxx
++++ b/common/network/TcpSocket.cxx
+@@ -298,6 +298,24 @@ bool TcpSocket::cork(bool enable) {
+ #endif
+ }
+ 
++void TcpSocket::setKeepalive(int seconds)
++{
++  int value = seconds ? 1 : 0;
++  setsockopt(getFd(), SOL_SOCKET, SO_KEEPALIVE, (char *)&value, sizeof(value));
++  if (value) {
++    value = seconds;
++    setsockopt(getFd(), IPPROTO_TCP, TCP_KEEPIDLE, (char *)&value, sizeof(value));
++
++    value = seconds / 10;
++    if (!value)
++      value = 1;
++    setsockopt(getFd(), IPPROTO_TCP, TCP_KEEPINTVL, (char *)&value, sizeof(value));
++
++    value = 5;
++    setsockopt(getFd(), IPPROTO_TCP, TCP_KEEPCNT, (char *)&value, sizeof(value));
++  }
++}
++
+ TcpListener::TcpListener(int sock) : SocketListener(sock)
+ {
+ }
+diff --git a/common/network/TcpSocket.h b/common/network/TcpSocket.h
+index eb6c0958..f78e792f 100644
+--- a/common/network/TcpSocket.h
++++ b/common/network/TcpSocket.h
+@@ -59,6 +59,7 @@ namespace network {
+     virtual char* getPeerEndpoint();
+ 
+     virtual bool cork(bool enable);
++    virtual void setKeepalive(int seconds);
+ 
+   protected:
+     bool enableNagles(bool enable);
+diff --git a/common/rfb/VNCSConnectionST.cxx b/common/rfb/VNCSConnectionST.cxx
+index 964d0f7b..25b8d423 100644
+--- a/common/rfb/VNCSConnectionST.cxx
++++ b/common/rfb/VNCSConnectionST.cxx
+@@ -61,6 +61,9 @@ VNCSConnectionST::VNCSConnectionST(VNCServerST* server_, network::Socket *s,
+   // Configure the socket
+   setSocketTimeouts();
+ 
++  // Hack: Set keepalive to detect severed connections
++  sock->setKeepalive(60);
++
+   // Kick off the idle timer
+   if (rfb::Server::idleTimeout) {
+     // minimum of 15 seconds while authenticating
+-- 
+2.34.1
+

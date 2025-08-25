@@ -1,0 +1,75 @@
+From f71f610d58036440048a170f2194a2e23b944708 Mon Sep 17 00:00:00 2001
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Date: Tue, 16 Jan 2024 16:27:43 +0100
+Subject: [PATCH] VNCServerST: Add a timeout to pointer button ownership
+
+When one clients holds down a button on the pointer device (probably
+dragging something), other clients' attempts at pointer operations
+are denied. This yields a sane user experience, but with limits.
+
+When one clients starts dragging, and then his network connection fails,
+other clients are denied access to the pointer until the VNC server
+finally discovers that the connection is dead and closes it. This can
+take about 15 minutes.
+
+Add a timeout to this policy: If we don't hear from the client for 3
+seconds, other clients are allowed to control the pointer once more.
+
+This solves the problem that one failing network could make the server
+completely deaf to other clients for a long time.
+
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+---
+ common/rfb/VNCServerST.cxx | 9 +++++++--
+ common/rfb/VNCServerST.h   | 2 ++
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/common/rfb/VNCServerST.cxx b/common/rfb/VNCServerST.cxx
+index 411cfd5e..a29fcf6e 100644
+--- a/common/rfb/VNCServerST.cxx
++++ b/common/rfb/VNCServerST.cxx
+@@ -82,6 +82,7 @@ VNCServerST::VNCServerST(const char* name_, SDesktop* desktop_)
+   : blHosts(&blacklist), desktop(desktop_), desktopStarted(false),
+     blockCounter(0), pb(0), ledState(ledUnknown),
+     name(strDup(name_)), pointerClient(0), clipboardClient(0),
++    pointerClientTime(0),
+     comparer(0), cursor(new Cursor(0, 0, Point(), NULL)),
+     renderedCursorInvalid(false),
+     keyRemapper(&KeyRemapper::defInstance),
+@@ -484,14 +485,18 @@ void VNCServerST::keyEvent(rdr::U32 keysym, rdr::U32 keycode, bool down)
+ void VNCServerST::pointerEvent(VNCSConnectionST* client,
+                                const Point& pos, int buttonMask)
+ {
++  time_t now = time(0);
++
+   if (rfb::Server::maxIdleTime)
+     idleTimer.start(secsToMillis(rfb::Server::maxIdleTime));
+ 
+   // Let one client own the cursor whilst buttons are pressed in order
+-  // to provide a bit more sane user experience
+-  if ((pointerClient != NULL) && (pointerClient != client))
++  // to provide a bit more sane user experience. But limit the time to prevent
++  // locking out all others when e.g. the network is down.
++  if ((pointerClient != NULL) && (pointerClient != client) && ((now - pointerClientTime) < 3))
+     return;
+ 
++  pointerClientTime = now;
+   if (buttonMask)
+     pointerClient = client;
+   else
+diff --git a/common/rfb/VNCServerST.h b/common/rfb/VNCServerST.h
+index 159e3a4b..b9a60462 100644
+--- a/common/rfb/VNCServerST.h
++++ b/common/rfb/VNCServerST.h
+@@ -191,6 +191,8 @@ namespace rfb {
+     std::list<VNCSConnectionST*> clipboardRequestors;
+     std::list<network::Socket*> closingSockets;
+ 
++    time_t pointerClientTime;
++
+     ComparingUpdateTracker* comparer;
+ 
+     Point cursorPos;
+-- 
+2.34.1
+

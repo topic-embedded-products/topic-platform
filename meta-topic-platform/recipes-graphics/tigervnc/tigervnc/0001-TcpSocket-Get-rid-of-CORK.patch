@@ -1,0 +1,33 @@
+From e0f734dc78369b23c9ded2ea49a428f311581590 Mon Sep 17 00:00:00 2001
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Date: Thu, 11 Jan 2024 15:45:21 +0100
+Subject: [PATCH] TcpSocket: Get rid of CORK
+
+strace reveils that CORK is called more often than sendto. Waste of
+syscalls, just let the OS handle things.
+---
+ common/network/TcpSocket.cxx | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/common/network/TcpSocket.cxx b/common/network/TcpSocket.cxx
+index 48e4ebd0..a5de24f7 100644
+--- a/common/network/TcpSocket.cxx
++++ b/common/network/TcpSocket.cxx
+@@ -288,14 +288,7 @@ bool TcpSocket::enableNagles(bool enable) {
+ }
+ 
+ bool TcpSocket::cork(bool enable) {
+-#ifndef TCP_CORK
+   return false;
+-#else
+-  int one = enable ? 1 : 0;
+-  if (setsockopt(getFd(), IPPROTO_TCP, TCP_CORK, (char *)&one, sizeof(one)) < 0)
+-    return false;
+-  return true;
+-#endif
+ }
+ 
+ TcpListener::TcpListener(int sock) : SocketListener(sock)
+-- 
+2.34.1
+

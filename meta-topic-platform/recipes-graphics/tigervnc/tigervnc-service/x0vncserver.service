@@ -1,0 +1,10 @@
+[Unit]
+Description=Remote desktop service (VNC) for :0 display
+Requires=display-manager.service
+After=display-manager.service
+
+[Service]
+Type=simple
+ExecStart=x0vncserver -display :0 -rfbauth /etc/vncpasswd -MaxDisconnectionTime 3
+User=@USER@
+

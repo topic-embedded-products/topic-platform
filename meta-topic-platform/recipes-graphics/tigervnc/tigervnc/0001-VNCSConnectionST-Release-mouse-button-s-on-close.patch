@@ -1,0 +1,44 @@
+From 574412b2c1c30e473c33ebd0ba7807e3bfd55a92 Mon Sep 17 00:00:00 2001
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Date: Thu, 11 Jan 2024 11:16:27 +0100
+Subject: [PATCH] VNCSConnectionST: Release mouse button(s) on close
+
+When the connection is severed, release all mouse buttons.
+
+This fixes an issue with x0vncserver where the local display
+would stop responding to mouse events if the connection closes
+while the remote user was holding down a mouse button.
+
+To reproduce, start a VNC client, press and hold a mouse button
+and then kill the connection (e.g. close client, kill server,
+yank network cable). This caused the local screen to no longer
+respond to any mouse-down events until a VNC client reconnects
+and clicks anywhere.
+
+This may inject a "mouse release" event while closing, however,
+if you click on your screen and then yank the mouse cable, a mouse
+release event also would not come unexpectedly, so the cure's
+side effects aren't as bad as the disease.
+
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+---
+ common/rfb/VNCSConnectionST.cxx | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/common/rfb/VNCSConnectionST.cxx b/common/rfb/VNCSConnectionST.cxx
+index 9b5ead9f..964d0f7b 100644
+--- a/common/rfb/VNCSConnectionST.cxx
++++ b/common/rfb/VNCSConnectionST.cxx
+@@ -78,6 +78,9 @@ VNCSConnectionST::~VNCSConnectionST()
+   if (closeReason.buf)
+     vlog.info("closing %s: %s", peerEndpoint.buf, closeReason.buf);
+ 
++  // Release any mouse buttons
++  server->pointerEvent(this, server->getCursorPos(), 0);
++
+   // Release any keys the client still had pressed
+   while (!pressedKeys.empty()) {
+     rdr::U32 keysym, keycode;
+-- 
+2.34.1
+

@@ -1,0 +1,143 @@
+From bb3e8ef12b0862881daad7e25229e337da08feab Mon Sep 17 00:00:00 2001
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Date: Fri, 12 Jan 2024 09:24:48 +0100
+Subject: [PATCH] x0vncserver: Add support for systemd socket activation
+
+systemd can pass in sockets as file descriptors 3 and beyond. Allows
+the server to use socket activation.
+
+When triggered by systemd, no other listening sockets (e.g. rfbport) will
+be activated.
+
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+---
+ CMakeLists.txt                   |  3 +++
+ unix/x0vncserver/CMakeLists.txt  |  6 ++++++
+ unix/x0vncserver/x0vncserver.cxx | 29 +++++++++++++++++++++++++++++
+ unix/x0vncserver/x0vncserver.man |  4 ++--
+ 4 files changed, 40 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d4c06c62..f74ebe47 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -309,6 +309,9 @@ if(UNIX AND NOT APPLE)
+   endif()
+ endif()
+ 
++# check for systemd support (socket activation)
++pkg_check_modules(LIBSYSTEMD libsystemd)
++
+ # Generate config.h and make sure the source finds it
+ configure_file(config.h.in config.h)
+ add_definitions(-DHAVE_CONFIG_H)
+diff --git a/unix/x0vncserver/CMakeLists.txt b/unix/x0vncserver/CMakeLists.txt
+index af824150..32aab290 100644
+--- a/unix/x0vncserver/CMakeLists.txt
++++ b/unix/x0vncserver/CMakeLists.txt
+@@ -22,6 +22,12 @@ add_executable(x0vncserver
+ 
+ target_link_libraries(x0vncserver tx rfb network rdr unixcommon)
+ 
++# systemd support (socket activation)
++if (LIBSYSTEMD_FOUND)
++  add_definitions(-DHAVE_SYSTEMD_H)
++  target_link_libraries(x0vncserver ${LIBSYSTEMD_LIBRARIES})
++endif()
++
+ if(X11_FOUND AND X11_XTest_LIB)
+   add_definitions(-DHAVE_XTEST)
+   target_link_libraries(x0vncserver ${X11_XTest_LIB})
+diff --git a/unix/x0vncserver/x0vncserver.cxx b/unix/x0vncserver/x0vncserver.cxx
+index 7384f93a..01da4bcf 100644
+--- a/unix/x0vncserver/x0vncserver.cxx
++++ b/unix/x0vncserver/x0vncserver.cxx
+@@ -38,6 +38,9 @@
+ #include <rfb/Timer.h>
+ #include <network/TcpSocket.h>
+ #include <network/UnixSocket.h>
++#ifdef HAVE_SYSTEMD_H
++#  include <systemd/sd-daemon.h>
++#endif
+ 
+ #include <signal.h>
+ #include <X11/X.h>
+@@ -113,6 +116,24 @@ static void CleanupSignalHandler(int sig)
+   caughtSignal = true;
+ }
+ 
++#ifdef HAVE_SYSTEMD_H
++static int createSystemdListeners(std::list<SocketListener*> *listeners)
++{
++  int count = sd_listen_fds(0);
++
++  for (int i = 0; i < count; ++i) {
++      /* systemd sockets start at FD 3 */
++      listeners->push_back(new TcpListener(3 + i));
++  }
++
++  return count;
++}
++#else
++static int createSystemdListeners(std::list<SocketListener*> *)
++{
++  return 0;
++}
++#endif
+ 
+ class FileTcpFilter : public TcpFilter
+ {
+@@ -301,6 +322,11 @@ int main(int argc, char** argv)
+ 
+     VNCServerST server(desktopName, &desktop);
+ 
++    if (createSystemdListeners(&listeners)) {
++      // When systemd is in charge of listeners, do not listen to anything else
++      vlog.info("Listening on systemd sockets");
++    } else {
++
+     if (rfbunixpath.getValueStr()[0] != '\0') {
+       listeners.push_back(new network::UnixListener(rfbunixpath, rfbunixmode));
+       vlog.info("Listening on %s (mode %04o)", (const char*)rfbunixpath, (int)rfbunixmode);
+@@ -308,6 +334,7 @@ int main(int argc, char** argv)
+ 
+     if ((int)rfbport != -1) {
+       const char *addr = interface;
++
+       if (strcasecmp(addr, "all") == 0)
+         addr = 0;
+       if (localhostOnly)
+@@ -319,6 +346,8 @@ int main(int argc, char** argv)
+                 (int)rfbport);
+     }
+ 
++    }
++
+     const char *hostsData = hostsFile.getData();
+     FileTcpFilter fileTcpFilter(hostsData);
+     if (strlen(hostsData) != 0)
+diff --git a/unix/x0vncserver/x0vncserver.man b/unix/x0vncserver/x0vncserver.man
+index c36ae34e..9a4e70f5 100644
+--- a/unix/x0vncserver/x0vncserver.man
++++ b/unix/x0vncserver/x0vncserver.man
+@@ -61,7 +61,7 @@ DISPLAY environment variable.
+ Specifies the TCP port on which x0vncserver listens for connections from
+ viewers (the protocol used in VNC is called RFB - "remote framebuffer").
+ The default port is 5900. Specify \fB-1\fP to disable listening on a TCP
+-port.
++port. Ignored when activated by a systemd socket.
+ .
+ .TP
+ .B \-UseIPv4
+@@ -74,7 +74,7 @@ Use IPv6 for incoming and outgoing connections. Default is on.
+ .TP
+ .B \-rfbunixpath \fIpath\fP
+ Specifies the path of a Unix domain socket on which x0vncserver listens for
+-connections from viewers.
++connections from viewers. Ignored when activated by a systemd socket.
+ .
+ .TP
+ .B \-rfbunixmode \fImode\fP
+-- 
+2.34.1
+
