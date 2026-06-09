@@ -6,7 +6,7 @@
 	url = https://github.com/openembedded/openembedded-core
 [submodule "bitbake"]
 	path = bitbake
-	url = git://git.openembedded.org/bitbake
+	url = https://github.com/openembedded/bitbake.git
 [submodule "meta-topic"]
 	path = meta-topic
 	url = https://github.com/topic-embedded-products/meta-topic
