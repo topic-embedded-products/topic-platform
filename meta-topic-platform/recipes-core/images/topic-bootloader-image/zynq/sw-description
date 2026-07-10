@@ -1,0 +1,22 @@
+software =
+{
+	version = "@@IMAGEVERSION@@";
+	description = "QSPI Bootloader for SWUpdate";
+	reboot = false;
+
+	hardware-compatibility: [ "@@SWU_HWREVISION@@" ];
+
+	images: (
+		{
+			filename = "@@UBOOTNAME@@";
+			device = "/dev/mtd0";
+			type = "flash";
+			offset = "@@UBOOTOFFSET@@";
+		},
+		{
+			filename = "boot.bin";
+			device = "/dev/mtd0";
+			type = "flash";
+		},
+	);
+}

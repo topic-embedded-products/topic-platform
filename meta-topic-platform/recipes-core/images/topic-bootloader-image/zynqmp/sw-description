@@ -1,0 +1,26 @@
+software =
+{
+	version = "@@IMAGEVERSION@@";
+	description = "QSPI and eMMC bootloader for SWUpdate";
+	reboot = false;
+
+	hardware-compatibility: [ "@@SWU_HWREVISION@@" ];
+
+	images: (
+		{
+			filename = "boot.bin";
+			device = "/dev/mtd0";
+			type = "flash";
+		}
+	),
+
+	files: (
+		{
+			filename = "boot.bin";
+			device = "/dev/mmcblk0p1";
+			filesystem = "vfat";
+			create-destination = "true";
+			path = "boot.bin";
+		}
+	);
+}
