@@ -45,6 +45,14 @@ then
 elif [ "$CMD" = "postinst" ]
 then
 	updatepart=$(cat /tmp/UPDATE-PART)
+	if tune2fs -L $(cat /tmp/UPDATE-LBL) /dev/block-rootfs-inactive
+	then
+		echo "Resizing root filesystem..."
+		# If we can set the label, then we can resize it too
+		resize2fs /dev/block-rootfs-inactive || echo "resize failed"
+	else
+		echo "Skip resize, unsupported filesystem"
+	fi
 	rmdir /tmp/UPDATE-MOUNT 2> /dev/null || true
 	if mkdir /tmp/UPDATE-MOUNT && mount /dev/block-rootfs-inactive /tmp/UPDATE-MOUNT -o rw,noatime
 	then
@@ -53,14 +61,6 @@ then
 		rmdir /tmp/UPDATE-MOUNT || true
 	else
 		echo "Cannot transfer settings"
-	fi
-	if tune2fs -L $(cat /tmp/UPDATE-LBL) /dev/block-rootfs-inactive
-	then
-		echo "Resizing root filesystem..."
-		# If we can set the label, then we can resize it too
-		resize2fs /dev/block-rootfs-inactive || echo "resize failed"
-	else
-		echo "Skip resize, unsupported filesystem"
 	fi
 	get-bootable-mbr-partition ${BLOCK} -s $(cat /tmp/UPDATE-PART)
 	reboot
