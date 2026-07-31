@@ -14,7 +14,3 @@ SRC_URI = " \
     file://sw-description \
     file://init_ubi \
     "
-
-UBOOTOFFSET ?= "0x60000"
-UBOOTOFFSET:zynq = "0x20000"
-UBOOTOFFSET:zynqmp = "0x60000"

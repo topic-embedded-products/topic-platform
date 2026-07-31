@@ -17,6 +17,11 @@ SWUPDATE_IMAGES = "${@bb.utils.contains('SWU_BOOT_TYPE', 'spl', 'boot u-boot', '
 # Only one @@...@@ per line gets replaced, so combine them here
 UBOOTNAME = "u-boot-${MACHINE}.${UBOOT_SUFFIX}"
 
+# For SPL boot, which needs to write two images to /dev/mtd0
+UBOOTOFFSET ?= "0x60000"
+UBOOTOFFSET:zynq = "0x20000"
+UBOOTOFFSET:zynqmp = "0x60000"
+
 # a deployable image can have multiple format, choose one
 SWUPDATE_IMAGES_FSTYPES[boot] = ".bin"
 SWUPDATE_IMAGES_NOAPPEND_MACHINE[boot] = "1"
