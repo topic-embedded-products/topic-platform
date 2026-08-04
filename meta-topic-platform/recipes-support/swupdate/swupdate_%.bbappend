@@ -26,21 +26,21 @@ DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)
 CONFFILES:${PN} += "${sysconfdir}/swu-transfer-list"
 
 do_install:append() {
-	install -m 644 ${WORKDIR}/20-swupdate-arguments ${D}${libdir}/swupdate/conf.d/
+	install -m 644 ${UNPACKDIR}/20-swupdate-arguments ${D}${libdir}/swupdate/conf.d/
 
 	install -d ${D}${sysconfdir}
-	install -m 644 ${WORKDIR}/swupdate.config ${D}${sysconfdir}/swupdate.cfg
-	install -m 0644 ${WORKDIR}/swu-transfer-list ${D}${sysconfdir}/swu-transfer-list
+	install -m 644 ${UNPACKDIR}/swupdate.config ${D}${sysconfdir}/swupdate.cfg
+	install -m 0644 ${UNPACKDIR}/swu-transfer-list ${D}${sysconfdir}/swu-transfer-list
 
 	install -d ${D}${sbindir}
-	install -m 0755 ${WORKDIR}/switch_mmc_boot_partition ${D}${sbindir}
-	install -m 0755 ${WORKDIR}/create_mmc_links ${D}${sbindir}
-	install -m 0755 ${WORKDIR}/swu-transfer-settings.sh ${D}${sbindir}/swu-transfer-settings
+	install -m 0755 ${UNPACKDIR}/switch_mmc_boot_partition ${D}${sbindir}
+	install -m 0755 ${UNPACKDIR}/create_mmc_links ${D}${sbindir}
+	install -m 0755 ${UNPACKDIR}/swu-transfer-settings.sh ${D}${sbindir}/swu-transfer-settings
 
-	install -m 0755 ${WORKDIR}/swu-hotplug.sh ${D}${sbindir}/
+	install -m 0755 ${UNPACKDIR}/swu-hotplug.sh ${D}${sbindir}/
 
 	# Replace 1MB image with something more modest
-	install -m 644 ${WORKDIR}/background.jpg ${D}/www/images/background.jpg
+	install -m 644 ${UNPACKDIR}/background.jpg ${D}/www/images/background.jpg
 	# Remove unneeded font files (they're only used for some icons)
 	rm ${D}/www/webfonts/fa-solid-900.woff*
 }

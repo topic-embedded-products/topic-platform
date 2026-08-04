@@ -12,7 +12,7 @@ SRC_URI = "\
     file://topic-usb-gadget.service \
     file://init \
     "
-S = "${WORKDIR}"
+S = "${UNPACKDIR}"
 
 inherit allarch systemd update-rc.d
 
@@ -27,9 +27,9 @@ do_install() {
     install -d ${D}${sbindir}
     install -m 755 ${S}/gadget_config.sh ${D}${sbindir}
     install -m 0755 -d ${D}${sysconfdir}/systemd/network
-    install -m 0644 ${WORKDIR}/10-usb*.network ${D}${sysconfdir}/systemd/network
+    install -m 0644 ${S}/10-usb*.network ${D}${sysconfdir}/systemd/network
     install -m 0755 -d ${D}${systemd_unitdir}/system
-    install -m 0644 ${WORKDIR}/topic-usb-gadget.service ${D}${systemd_unitdir}/system/
+    install -m 0644 ${S}/topic-usb-gadget.service ${D}${systemd_unitdir}/system/
     install -d ${D}${sysconfdir}/init.d
-    install -m 755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/${BPN}.sh
+    install -m 755 ${S}/init ${D}${sysconfdir}/init.d/${BPN}.sh
 }

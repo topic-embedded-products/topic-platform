@@ -14,9 +14,11 @@ SRC_URI = "\
 	file://partition_sd_card.sh \
 	"
 
+S = "${UNPACKDIR}"
+
 do_install() {
 	install -d ${D}${sbindir}
-	install -m 0755 ${WORKDIR}/prepare_filesystem ${D}${sbindir}
-	install -m 0755 ${WORKDIR}/init_ubi ${D}${sbindir}
-	install -m 0755 ${WORKDIR}/partition_sd_card.sh ${D}${sbindir}/partition_sd_card
+	install -m 0755 ${S}/prepare_filesystem ${D}${sbindir}
+	install -m 0755 ${S}/init_ubi ${D}${sbindir}
+	install -m 0755 ${S}/partition_sd_card.sh ${D}${sbindir}/partition_sd_card
 }

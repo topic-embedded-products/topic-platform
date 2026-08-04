@@ -3,7 +3,7 @@ LICENSE = "CLOSED"
 
 PV = "0"
 SRC_URI = "file://${BPN}.c file://init.sh"
-S = "${WORKDIR}"
+S = "${UNPACKDIR}"
 
 inherit update-rc.d
 

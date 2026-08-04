@@ -5,12 +5,12 @@ SRC_URI += "\
 	"
 
 do_install:append() {
-	if grep -q "CONFIG_CRONTAB=y" ${WORKDIR}/defconfig; then
+	if grep -q "CONFIG_CRONTAB=y" ${UNPACKDIR}/defconfig; then
 		install -d ${D}${sysconfdir}/cron/crontabs
 	fi
 	install -d ${D}${sysconfdir}/default
-	install -m 644 ${WORKDIR}/mdev-defaults ${D}${sysconfdir}/default/mdev
-	install -m 755 ${WORKDIR}/mdev-network.sh ${D}${sysconfdir}/mdev/
+	install -m 644 ${UNPACKDIR}/mdev-defaults ${D}${sysconfdir}/default/mdev
+	install -m 755 ${UNPACKDIR}/mdev-network.sh ${D}${sysconfdir}/mdev/
 }
 
 FILES:${PN}-mdev += "${sysconfdir}/default/mdev"

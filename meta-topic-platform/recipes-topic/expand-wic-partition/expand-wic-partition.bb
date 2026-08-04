@@ -3,7 +3,7 @@ LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0-or-later;md5=fed54355545ffd980b814dab4a3b312c"
 
 SRC_URI = "file://init file://${BPN}.service file://${BPN}.sh"
-S = "${WORKDIR}"
+S = "${UNPACKDIR}"
 
 RDEPENDS:${PN} += "\
 	e2fsprogs-resize2fs \
@@ -27,10 +27,10 @@ FILES:${PN} = "${bindir} ${sysconfdir} ${systemd_unitdir}"
 
 do_install() {
 	install -d ${D}${bindir}
-	install -m 755 ${WORKDIR}/${BPN}.sh ${D}${bindir}/${PN}.sh
+	install -m 755 ${S}/${BPN}.sh ${D}${bindir}/${PN}.sh
 	install -d ${D}${sysconfdir}/init.d
-	install -m 755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/${BPN}.sh
+	install -m 755 ${S}/init ${D}${sysconfdir}/init.d/${BPN}.sh
 	install -d ${D}${systemd_unitdir}/system
-	install -m 0644 ${WORKDIR}/${BPN}.service ${D}${systemd_unitdir}/system/
+	install -m 0644 ${S}/${BPN}.service ${D}${systemd_unitdir}/system/
 	sed -i -e 's,@BINDIR@,${bindir},g' ${D}${systemd_unitdir}/system/${BPN}.service
 }

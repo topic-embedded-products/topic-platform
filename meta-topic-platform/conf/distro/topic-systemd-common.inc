@@ -10,8 +10,8 @@ PREFERRED_PROVIDER_jpeg-native = "libjpeg-turbo-native"
 INIT_MANAGER = "systemd"
 
 # Clean up features
-DISTRO_FEATURES_BACKFILL_CONSIDERED:append = " pulseaudio"
-DISTRO_FEATURES_DEFAULT = "ipv4 usbgadget usbhost largefile wifi bluetooth"
+DISTRO_FEATURES_OPTED_OUT:append = " pulseaudio"
+DISTRO_FEATURES_DEFAULTS = "ipv4 usbgadget usbhost largefile wifi bluetooth"
 
 # For SWUpdate
 PREFERRED_PROVIDER_u-boot-fw-utils = "libubootenv"

@@ -8,8 +8,6 @@ SRCREV = "6ced184ba3c21afd225eab70106e25bc5917c147"
 BRANCH = "master"
 SRC_URI = "git://github.com/topic-embedded-products/${BPN};branch=${BRANCH};protocol=https"
 
-S = "${WORKDIR}/git"
-
 do_install() {
     install -d ${D}${sbindir}
     install -m 0755 ${B}/${PN} ${D}${sbindir}

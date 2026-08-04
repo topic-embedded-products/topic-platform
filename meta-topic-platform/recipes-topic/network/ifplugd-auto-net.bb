@@ -7,7 +7,7 @@ inherit allarch update-rc.d
 
 SRC_URI = "file://init.sh file://ifplugd.auto file://ifplugd.wlan0"
 
-S = "${WORKDIR}"
+S = "${UNPACKDIR}"
 PACKAGES = "${PN}"
 FILES:${PN} = "${sysconfdir}"
 

@@ -10,7 +10,7 @@ SRC_URI = "\
 	file://udhcpd_up.sh file://udhcpd_down.sh \
 	file://udhcpd.usb0.conf file://udhcpd.wlan1.conf \
 	"
-S = "${WORKDIR}"
+S = "${UNPACKDIR}"
 FILES:${PN} = "${sysconfdir}"
 
 # Don't install ifplugd-auto-net on systemd

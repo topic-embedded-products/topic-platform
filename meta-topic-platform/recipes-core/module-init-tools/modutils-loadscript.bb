@@ -8,7 +8,7 @@ PV = "3"
 INITSCRIPT_NAME = "modload.sh"
 INITSCRIPT_PARAMS = "start 5 S ."
 
-S = "${WORKDIR}"
+S = "${UNPACKDIR}"
 
 inherit allarch update-rc.d
 
@@ -17,7 +17,7 @@ do_compile () {
 
 do_install () {
 	install -d ${D}${sysconfdir}/init.d/
-	install -m 0755 ${WORKDIR}/modload.sh ${D}${sysconfdir}/init.d/
+	install -m 0755 ${S}/modload.sh ${D}${sysconfdir}/init.d/
 }
 
 do_compile[noexec] = "1"
