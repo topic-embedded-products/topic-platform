@@ -19,11 +19,6 @@ PREFERRED_PROVIDER_u-boot-fw-utils = "libubootenv"
 # do not install a syslog daemon (defaults to busybox-syslog)
 VIRTUAL-RUNTIME_base-utils-syslog = ""
 
-# build some core libs with heavier compiler optimization
-O3_OPT = "-O3 -pipe ${DEBUG_FLAGS}"
-FULL_OPTIMIZATION:pn-libgcrypt = "${O3_OPT}"
-FULL_OPTIMIZATION:pn-zlib = "${O3_OPT}"
-
 # Allow licenses for gstreamer components (consult your legal department...)
 LICENSE_FLAGS_ACCEPTED ?= "commercial xilinx"
 COMMERCIAL_AUDIO_PLUGINS ?= "gst-plugins-ugly-mad gst-plugins-ugly-mpegaudioparse"
