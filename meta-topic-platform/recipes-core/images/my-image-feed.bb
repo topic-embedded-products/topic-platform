@@ -7,7 +7,7 @@ require recipes-core/meta/package-index.bb
 # The images to build
 DEPENDS = "my-image my-image-ro"
 
-IMAGES_QSPI = "init-qspi-swu my-image-swu-qspi"
+IMAGES_QSPI = "init-qspi-swu"
 IMAGES_EMMC = "init-emmc-swu"
 IMAGES_MMC0 = "my-image-swu-mmcblk0 my-image-ro-swu-mmcblk0"
 IMAGES_MMC1 = "my-image-swu-mmcblk1 my-image-ro-swu-mmcblk1"
