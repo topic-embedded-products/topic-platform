@@ -44,3 +44,7 @@ do_install:append() {
 	# Remove unneeded font files (they're only used for some icons)
 	rm ${D}/www/webfonts/fa-solid-900.woff*
 }
+
+# Avoid error until upstream properly fixes this:
+# ERROR: swupdate-2026.05.1-r0 do_package_qa: QA Issue: File /usr/bin/swupdate in package swupdate contains reference to TMPDIR [buildpaths]
+INSANE_SKIP += "buildpaths"
