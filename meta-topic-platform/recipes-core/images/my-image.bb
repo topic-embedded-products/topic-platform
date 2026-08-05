@@ -63,7 +63,7 @@ IMAGE_INSTALL = "\
 	"
 
 # Reduce dropbear host key size to reduce boot time by about 5 seconds
-DROPBEAR_RSAKEY_SIZE="1024"
+DROPBEAR_RSAKEY_SIZE = "1024"
 
 DEVICETREELINKS ??= "system.dtb ${DEVICETREE}"
 
