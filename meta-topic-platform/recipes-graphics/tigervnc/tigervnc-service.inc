@@ -12,6 +12,8 @@ SYSTEMD_SERVICE:${PN} = "${SERVICENAME}.socket"
 
 RDEPENDS:${PN} += "tigervnc-server"
 
+S = "${UNPACKDIR}"
+
 do_compile() {
     :
 }
@@ -23,8 +25,8 @@ VNC_USER ?= "root"
 
 do_install() {
     install -m 0755 -d ${D}${systemd_unitdir}/system
-    install -m 0644 ${WORKDIR}/${SERVICENAME}.service ${WORKDIR}/${SERVICENAME}.socket ${D}${systemd_unitdir}/system/
+    install -m 0644 ${S}/${SERVICENAME}.service ${S}/${SERVICENAME}.socket ${D}${systemd_unitdir}/system/
     sed -i 's/@USER@/${VNC_USER}/g' ${D}${systemd_unitdir}/system/${SERVICENAME}.service
     install -m 0755 -d ${D}${sysconfdir}
-    install -m 0644 ${WORKDIR}/vncpasswd ${D}${sysconfdir}/
+    install -m 0644 ${S}/vncpasswd ${D}${sysconfdir}/
 }
