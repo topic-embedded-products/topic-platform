@@ -14,5 +14,5 @@ PACKAGECONFIG:append = "\
 
 # Disable the network renaming "feature" so that we keep "eth0"
 do_install:append() {
-	ln -s -f /dev/null ${D}${rootlibexecdir}/systemd/network/99-default.link
+	ln -s -f /dev/null ${D}${nonarch_libdir}/systemd/network/99-default.link
 }
