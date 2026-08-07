@@ -2,9 +2,8 @@
 # machine, look in meta-topic/conf/machine for a list of values.
 # export MACHINE=pick-a-valid-machine-name
 export BB_ENV_PASSTHROUGH_ADDITIONS=MACHINE
-export BUILDDIR="${PWD}"
-TOPDIR=`dirname ${PWD}`
-export PATH=${TOPDIR}/oe-core/scripts:${TOPDIR}/bitbake/bin:$PATH
+export MACHINE
+source ../oe-core/oe-init-build-env . ../bitbake > /dev/null
 if [ -z "${MACHINE}" ]
 then
     echo "Set a valid MACHINE before building, e.g."
