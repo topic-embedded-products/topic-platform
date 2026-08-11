@@ -5,7 +5,7 @@ DESCRIPTION = "The Freedoom project aims at collaboratively creating a Free IWAD
 	       based on the Doom engine which is Free Software."
 HOMEPAGE = "http://freedoom.sourceforge.net/"
 PRIORITY = "optional"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING.txt;md5=f4bc057015de5afef5e56f1cd5dfbae1"
 do_unpack[depends] += "unzip-native:do_populate_sysroot"
 

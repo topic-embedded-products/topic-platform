@@ -2,7 +2,7 @@
 DESCRIPTION = "A Doom Clone based on SDL"
 SECTION = "games"
 DEPENDS = "virtual/libsdl2 libsdl2-mixer libsdl2-net fluidsynth libsamplerate0 libpng pkgconfig"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING.md;md5=60d644347832d2dd9534761f6919e2a6"
 
 RRECOMMENDS:${PN} = "freedoom"
