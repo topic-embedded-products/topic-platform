@@ -45,10 +45,10 @@ nice bitbake ${IMAGE}-swu-${DEVICE}
 # Support having ".rootfs" in the filename
 for IMAGE_NAME_SUFFIX in '.rootfs' ''
 do
-	if [ -e "tmp-glibc/deploy/images/${MACHINE}/${IMAGE}-swu-${DEVICE}-${MACHINE}${IMAGE_NAME_SUFFIX}.swu" ]
+	if [ -e "tmp/deploy/images/${MACHINE}/${IMAGE}-swu-${DEVICE}-${MACHINE}${IMAGE_NAME_SUFFIX}.swu" ]
 	then
 		break
 	fi
 done
 echo "Sending ${IMAGE}-swu-${DEVICE}-${MACHINE}${IMAGE_NAME_SUFFIX}.swu to ${HOST}"
-curl -F "file=@tmp-glibc/deploy/images/${MACHINE}/${IMAGE}-swu-${DEVICE}-${MACHINE}${IMAGE_NAME_SUFFIX}.swu" "http://${HOST}/upload"
+curl -F "file=@tmp/deploy/images/${MACHINE}/${IMAGE}-swu-${DEVICE}-${MACHINE}${IMAGE_NAME_SUFFIX}.swu" "http://${HOST}/upload"

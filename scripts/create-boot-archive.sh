@@ -8,7 +8,7 @@ then
 fi
 
 set -e
-IMAGE_ROOT=tmp-glibc/deploy/images/${MACHINE}
+IMAGE_ROOT=tmp/deploy/images/${MACHINE}
 if [ -d ${IMAGE_ROOT}/boot ]
 then
 	rm -rf ${IMAGE_ROOT}/boot

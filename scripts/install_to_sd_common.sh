@@ -34,7 +34,7 @@ fi
 
 if [ -z "${IMAGE_ROOT}" ]
 then
-	IMAGE_ROOT=tmp-glibc/deploy/images/${MACHINE}
+	IMAGE_ROOT=tmp/deploy/images/${MACHINE}
 fi
 
 # Ubuntu <14 uses /media for mounts, Ubuntu 14 uses /media/$USER
@@ -231,14 +231,14 @@ then
 	then
 		# Attempt to use e2fsprogs from Yocto/OE as the build host may have old versions...
 		RESIZE2FS=resize2fs
-		if [ -x tmp-glibc/sysroots-components/x86_64/e2fsprogs-native/sbin/resize2fs ]
+		if [ -x tmp/sysroots-components/x86_64/e2fsprogs-native/sbin/resize2fs ]
 		then
-			RESIZE2FS=tmp-glibc/sysroots-components/x86_64/e2fsprogs-native/sbin/resize2fs
+			RESIZE2FS=tmp/sysroots-components/x86_64/e2fsprogs-native/sbin/resize2fs
 		fi
 		TUNE2FS=tune2fs
-		if [ -x tmp-glibc/sysroots-components/x86_64/e2fsprogs-native/sbin/tune2fs ]
+		if [ -x tmp/sysroots-components/x86_64/e2fsprogs-native/sbin/tune2fs ]
 		then
-			TUNE2FS=tmp-glibc/sysroots-components/x86_64/e2fsprogs-native/sbin/tune2fs
+			TUNE2FS=tmp/sysroots-components/x86_64/e2fsprogs-native/sbin/tune2fs
 		fi
 		${TUNE2FS} -L ${ROOTLABEL} ${BLOCK_DEV_ROOT} || echo "Could not set label"
 		${RESIZE2FS} ${BLOCK_DEV_ROOT} || echo "could not resize filesystem"

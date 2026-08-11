@@ -15,8 +15,8 @@ for machine in tdkz15 tdkz30 tepzu9
 do
   export MACHINE=$machine
   nice bitbake -k my-image-feed
-  nice xz -6 < tmp-glibc/deploy/images/${MACHINE}/my-image-${MACHINE}.rootfs.wic > artefacts-nv/my-image-${MACHINE}.wic.xz &
-  cp -l tmp-glibc/deploy/images/${MACHINE}/*-${MACHINE}.rootfs.swu artefacts-nv/
+  nice xz -6 < tmp/deploy/images/${MACHINE}/my-image-${MACHINE}.rootfs.wic > artefacts-nv/my-image-${MACHINE}.wic.xz &
+  cp -l tmp/deploy/images/${MACHINE}/*-${MACHINE}.rootfs.swu artefacts-nv/
 done
 
 # wait for XZ compressors
@@ -50,7 +50,7 @@ for machine in tdkz15 tdkz30 tepzu9
 do
   export MACHINE=$machine
   nice bitbake -k my-image-sato-ro-swu-mmcblk0
-  cp -l tmp-glibc/deploy/images/${MACHINE}/*-${MACHINE}.rootfs.swu artefacts-nv/
+  cp -l tmp/deploy/images/${MACHINE}/*-${MACHINE}.rootfs.swu artefacts-nv/
 done
 
 for ext in swu
