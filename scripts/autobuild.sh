@@ -11,7 +11,7 @@ source ./profile
 rm -rf artefacts artefacts-nv
 mkdir artefacts
 mkdir artefacts-nv
-for machine in tdkz15 tdkz30 tepzu9 tdpzu9 ttpzu9 tdkzu6 tdkzu9 tdkzu15
+for machine in tdkz15 tdkz30 tepzu9
 do
   export MACHINE=$machine
   nice bitbake -k my-image-feed
@@ -43,7 +43,7 @@ echo 'DISTRO = "topic-x11"' > conf/site.conf
 rm -rf artefacts artefacts-nv
 ln -s ../build/artefacts artefacts
 mkdir artefacts-nv
-for machine in tdkz15 tdkz30 tepzu9 tdkzu6 tdkzu9 tdkzu15
+for machine in tdkz15 tdkz30 tepzu9
 do
   export MACHINE=$machine
   nice bitbake -k my-image-sato-ro-swu-mmcblk0
@@ -73,7 +73,7 @@ echo 'DISTRO = "topic-wayland"' > conf/site.conf
 rm -rf artefacts artefacts-nv
 ln -s ../build/artefacts artefacts
 mkdir artefacts-nv
-for machine in tepzu9 tdkzu9
+for machine in tepzu9
 do
   export MACHINE=$machine
   nice bitbake -k my-image-sato-ro-swu-mmcblk0 weston wayland
