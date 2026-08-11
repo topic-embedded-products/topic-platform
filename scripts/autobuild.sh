@@ -38,6 +38,9 @@ then
   scripts/init-oe.sh build-x11
 fi
 cd build-x11
+# Make up for not sourcing "profile" again
+export BUILDDIR="${PWD}"
+export BBPATH="${BUILDDIR}"
 # Configure for X11
 echo 'DISTRO = "topic-x11"' > conf/site.conf
 rm -rf artefacts artefacts-nv
@@ -68,6 +71,9 @@ then
   scripts/init-oe.sh build-wayland
 fi
 cd build-wayland
+# Make up for not sourcing "profile" again
+export BUILDDIR="${PWD}"
+export BBPATH="${BUILDDIR}"
 # Configure for wayland
 echo 'DISTRO = "topic-wayland"' > conf/site.conf
 rm -rf artefacts artefacts-nv
