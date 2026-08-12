@@ -23,12 +23,10 @@ RDEPENDS:${PN} = "${PN}1 ${PN}2"
 FILES:${PN}1 = "${datadir}/games/doom/freedoom1.wad"
 FILES:${PN}2 = "${datadir}/games/doom/freedoom2.wad"
 
-S = "${UNPACKDIR}"
-
 do_install() {
 	install -d ${D}/${datadir}/games/doom
-	install -m 0644 ${S}/freedoom-${PV}/freedoom1.wad ${D}/${datadir}/games/doom/
-	install -m 0644 ${S}/freedoom-${PV}/freedoom2.wad ${D}/${datadir}/games/doom/
+	install -m 0644 ${S}/freedoom1.wad ${D}/${datadir}/games/doom/
+	install -m 0644 ${S}/freedoom2.wad ${D}/${datadir}/games/doom/
 }
 
 

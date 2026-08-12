@@ -13,6 +13,4 @@ SRCREV = "a78ff2b9195bd686c8b2bad8ffc354e55646bef6"
 
 inherit autotools gettext pkgconfig
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} += "${datadir} ${bindir}"
