@@ -109,4 +109,31 @@ myimage_rootfs_postprocess() {
 
 	echo 'DROPBEAR_RSAKEY_ARGS="-s ${DROPBEAR_RSAKEY_SIZE}"' >> ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear
 }
+
+# For read-only rootfs, fix that systemd-timesyncd and systemd-networkd-persistent-storage
+# won't start
+myimage_read_only_rootfs_hook() {
+	for f in systemd-timesyncd systemd-networkd-persistent-storage
+	do
+		if [ -e ${IMAGE_ROOTFS}/usr/lib/systemd/system/$f.service ]
+		then
+			sed -i "/After=/i After=var-volatile-lib.service" ${IMAGE_ROOTFS}/usr/lib/systemd/system/$f.service
+		fi
+	done
+}
+
+# We require access to the git repository here, so we must run outside fakeroot
+# Store the git hash into /etc/revision
+# On read-only filesystems, create a fixed machine-id (using the git hash)
+do_addrevisioninfo() {
+	git rev-parse --verify --short=32 HEAD >> ${IMAGE_ROOTFS}${sysconfdir}/revision
+	if ${@bb.utils.contains("IMAGE_FEATURES", "read-only-rootfs", "true", "false",d)}
+	then
+		cut -b 1-32 ${IMAGE_ROOTFS}${sysconfdir}/revision > ${IMAGE_ROOTFS}${sysconfdir}/machine-id
+	fi
+}
+
+addtask do_addrevisioninfo before do_image after do_rootfs
+
 ROOTFS_POSTPROCESS_COMMAND += "myimage_rootfs_postprocess ; "
+ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains("IMAGE_FEATURES", "read-only-rootfs", "myimage_read_only_rootfs_hook ", "",d)}'
