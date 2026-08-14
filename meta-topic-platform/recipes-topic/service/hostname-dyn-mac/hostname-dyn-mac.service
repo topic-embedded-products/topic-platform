@@ -1,0 +1,13 @@
+[Unit]
+Description=Dynamic host name based on MAC address
+Wants=network-pre.target
+After=sys-subsystem-net-devices-eth0.device
+Requires=sys-subsystem-net-devices-eth0.device
+Before=network-pre.target nss-lookup.target avahi-daemon.service
+
+[Service]
+ExecStart=/usr/bin/hostname-dyn-mac.sh
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target
