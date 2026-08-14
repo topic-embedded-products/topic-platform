@@ -107,6 +107,11 @@ myimage_rootfs_postprocess() {
 		rm -f ${IMAGE_ROOTFS}${sysconfdir}/hostname
 	fi
 
+	# Remove OSC3008 support (same as removing osc-context from systemd
+	# PACKAGECONFIG, but less intrusive)
+	rm -f ${IMAGE_ROOTFS}${sysconfdir}/profile.d/80-systemd-osc-context.sh
+	rm -f ${IMAGE_ROOTFS}${nonarch_libdir}/tmpfiles.d/20-systemd-osc-context.conf
+
 	echo 'DROPBEAR_RSAKEY_ARGS="-s ${DROPBEAR_RSAKEY_SIZE}"' >> ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear
 }
 
