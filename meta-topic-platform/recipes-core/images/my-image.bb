@@ -26,6 +26,9 @@ DHCPSERVERCONFIG = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'topic-us
 # The poweroff-key is not needed when running systemd
 POWERKEY_PROGRAM = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'poweroff-key', d)}"
 
+# Use a dynamically generated hostname when running systemd
+HOSTNAME_PROVIDER ?= "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'hostname-dyn-mac', '', d)}"
+
 # Be able to find the machine on the network
 MDNS_PROVIDER ?= "avahi-daemon"
 
@@ -41,6 +44,7 @@ MY_THINGS = "\
 	${@bb.utils.contains('MACHINE_FEATURES', 'powerkey', d.getVar('POWERKEY_PROGRAM'), '', d)} \
 	${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd-net-config', '', d)} \
 	${MDNS_PROVIDER} \
+	${HOSTNAME_PROVIDER} \
 	"
 
 # Skip packagegroup-base to reduce the number of packages built. Thus, we need
@@ -97,6 +101,11 @@ myimage_rootfs_postprocess() {
 			ln -s ${TARGET} ${IMAGE_ROOTFS}/boot/${LINK}
 		fi
 	done
+
+	if [ -n "${HOSTNAME_PROVIDER}" ]
+	then
+		rm -f ${IMAGE_ROOTFS}${sysconfdir}/hostname
+	fi
 
 	echo 'DROPBEAR_RSAKEY_ARGS="-s ${DROPBEAR_RSAKEY_SIZE}"' >> ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear
 }
