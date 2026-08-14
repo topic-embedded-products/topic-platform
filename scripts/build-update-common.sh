@@ -24,7 +24,22 @@ then
 fi
 if [ -z "${HOST}" ]
 then
-	HOST="${MACHINE}.local:8080"
+	echo "HOST not set. Looking for candidates on the local network"
+	candidates=`avahi-browse --ignore-local --terminate _workstation._tcp -p -k | cut -d ';' -f 4 | cut -d '\' -f 1 | grep '^tep' | sort -u`
+	if [ -z "${candidates}" ]
+	then
+		echo "No boards found. Please set HOST manually"
+		c="${MACHINE}"
+	else
+		echo "Please set HOST to one of these:"
+		for c in ${candidates}
+		do
+			echo "HOST=${c}.local:8080"
+		done
+	fi
+	echo "For example, run as:"
+	echo "HOST=${c}.local:8080 $0"
+	exit 2
 fi
 nice bitbake ${IMAGE}-swu-${DEVICE}
 # Support having ".rootfs" in the filename
