@@ -16,4 +16,6 @@ MY_GAMES = "crispy-doom freedoom1"
 
 MY_WAYLAND = "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)}"
 
-MY_THINGS += "${MY_WAYLAND} ${MY_GAMES}"
+MY_VNC ?= "tigervnc-service-root"
+
+MY_THINGS += "${MY_WAYLAND} ${MY_GAMES} ${MY_VNC}"
