@@ -7,7 +7,7 @@ source ../oe-core/oe-init-build-env . ../bitbake > /dev/null
 if [ -z "${MACHINE}" ]
 then
     echo "Set a valid MACHINE before building, e.g."
-    echo "export MACHINE=tdkzu9"
+    echo "export MACHINE=tepzu9"
 else
     echo "MACHINE=${MACHINE}"
 fi
