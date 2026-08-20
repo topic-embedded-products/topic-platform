@@ -2,7 +2,6 @@ SUMMARY = "Dynamic MAC address based on hostname (systemd only)"
 LICENSE = "CLOSED"
 
 SRC_URI = "file://${BPN}.service file://${BPN}.sh"
-UNPACKDIR ??= "${WORKDIR}"
 S = "${UNPACKDIR}"
 
 inherit allarch systemd
